@@ -6,7 +6,7 @@ import numpy as np
 
 # IP y Puerto
 HOST = '127.0.0.1'
-PORT = 8080
+PORT = 8000
 
 # Almacenar informacion de los rooms y usuarios
 rooms = {}
