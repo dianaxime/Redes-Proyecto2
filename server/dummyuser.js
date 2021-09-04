@@ -1,4 +1,7 @@
 var omit = require('lodash/omit');
+var shuffle = require('lodash/shuffle');
+var sampleSize = require('lodash/sampleSize');
+var remove = require('lodash/remove');
 
 let c_users = {};
 let c_rooms = {};
@@ -32,7 +35,7 @@ Una mesa/room se veria algo asi
 
 */
 
-pool_cards = [
+let pool_cards = [
   { palo: 'oro', valor: 1}, { palo: 'oro', valor: 2}, { palo: 'oro', valor: 3}, { palo: 'oro', valor: 4},
   { palo: 'oro', valor: 5}, { palo: 'oro', valor: 6}, { palo: 'oro', valor: 7}, { palo: 'oro', valor: 8},
   { palo: 'oro', valor: 9}, { palo: 'oro', valor: 10}, { palo: 'oro', valor: 11}, { palo: 'oro', valor: 12},
@@ -58,6 +61,7 @@ function join_User(id, username, room) {
   console.log(c_users, "users");
 
   c_rooms[room]['cantidad_jugadores'] = c_rooms[room]['cantidad_jugadores'] + 1;
+  c_rooms[room]['usuarios'] = [...c_rooms[room]['usuarios'], id];
   console.log(c_rooms, "rooms desde join user");
 
   return p_user;
@@ -77,7 +81,7 @@ function user_Disconnect(id) {
 }
 
 function create_Room(room) {
-  const p_room = { room, cantidad_jugadores: 0, turno_actual: -1, cartas_mesa: {}, ultima_jugada: {}, es_mentira: false, partida_iniciada: false};
+  const p_room = { room, cantidad_jugadores: 0, turno_actual: -1, cartas_mesa: {}, ultima_jugada: {}, es_mentira: false, partida_iniciada: false, usuarios: []};
 
   c_rooms[room] = p_room;
   console.log(c_rooms, "rooms desde create");
@@ -87,10 +91,26 @@ function check_Room(room) {
   return c_rooms.hasOwnProperty(room);
 }
 
+function shuffle_Cards(room) {
+  pool_cards = shuffle(pool_cards);
+  const cantidad = Math.floor(48 / c_rooms[room]['cantidad_jugadores']);
+
+  if (c_rooms[room]['cantidad_jugadores'] >= 3){
+    
+    for (var i of c_rooms[room]['usuarios']){
+      cartas_jugador = pool_cards.splice(0, cantidad)
+      c_users[i]['mano'] = cartas_jugador
+      
+    }
+  }
+
+}
+
 module.exports = {
   join_User,
   get_Current_User,
   user_Disconnect,
   create_Room,
-  check_Room
+  check_Room,
+  shuffle_Cards
 };

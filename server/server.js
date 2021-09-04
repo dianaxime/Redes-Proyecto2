@@ -8,7 +8,8 @@ const {
   user_Disconnect, 
   join_User,
   create_Room,
-  check_Room 
+  check_Room,
+  shuffle_Cards 
 } = require("./dummyuser");
 
 app.use(express());
@@ -54,6 +55,8 @@ io.on("connection", (socket) => {
       username: p_user.username,
       text: `${p_user.username} has joined the chat`,
     });
+
+    shuffle_Cards(roomname);
   });
 
   //user sending message
