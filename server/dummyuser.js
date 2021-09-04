@@ -1,7 +1,7 @@
 var omit = require('lodash/omit');
 
-const c_users = {};
-const c_rooms = {};
+let c_users = {};
+let c_rooms = {};
 
 /* 
 -------------------------------------------------------
@@ -57,6 +57,9 @@ function join_User(id, username, room) {
   c_users[id] = p_user;
   console.log(c_users, "users");
 
+  c_rooms[room]['cantidad_jugadores'] = c_rooms[room]['cantidad_jugadores'] + 1;
+  console.log(c_rooms, "rooms desde join user");
+
   return p_user;
 }
 
@@ -73,8 +76,21 @@ function user_Disconnect(id) {
   return c_users;
 }
 
+function create_Room(room) {
+  const p_room = { room, cantidad_jugadores: 0, turno_actual: -1, cartas_mesa: {}, ultima_jugada: {}, es_mentira: false, partida_iniciada: false};
+
+  c_rooms[room] = p_room;
+  console.log(c_rooms, "rooms desde create");
+}
+
+function check_Room(room) {
+  return c_rooms.hasOwnProperty(room);
+}
+
 module.exports = {
   join_User,
   get_Current_User,
   user_Disconnect,
+  create_Room,
+  check_Room
 };

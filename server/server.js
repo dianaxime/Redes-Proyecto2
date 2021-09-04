@@ -3,7 +3,13 @@ const app = express();
 const socket = require("socket.io");
 const color = require("colors");
 const cors = require("cors");
-const { get_Current_User, user_Disconnect, join_User } = require("./dummyuser");
+const { 
+  get_Current_User, 
+  user_Disconnect, 
+  join_User,
+  create_Room,
+  check_Room 
+} = require("./dummyuser");
 
 app.use(express());
 
@@ -25,6 +31,11 @@ const io = socket(server);
 io.on("connection", (socket) => {
   //for a new user joining the room
   socket.on("joinRoom", ({ username, roomname }) => {
+    // Verificar si ya existe el room y si no lo crea
+    if (!check_Room(roomname)){
+      create_Room(roomname);
+    }
+
     //* create user
     const p_user = join_User(socket.id, username, roomname);
     console.log(socket.id, "=id");
