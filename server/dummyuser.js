@@ -1,5 +1,7 @@
-const c_users = [];
-const c_rooms = [];
+var omit = require('lodash/omit');
+
+const c_users = {};
+const c_rooms = {};
 
 /* 
 -------------------------------------------------------
@@ -23,7 +25,9 @@ Una mesa/room se veria algo asi
   cantidad_jugadores: 3,
   turno_actual: 2,
   cartas_mesa: [],
-  ultima_jugada: []
+  ultima_jugada: [],
+  es_mentira: true,
+  partida_iniciada: true,
 }
 
 */
@@ -50,7 +54,7 @@ pool_cards = [
 function join_User(id, username, room) {
   const p_user = { id, username, room };
 
-  c_users.push(p_user);
+  c_users[id] = p_user;
   console.log(c_users, "users");
 
   return p_user;
@@ -60,16 +64,13 @@ console.log("user out", c_users);
 
 // Gets a particular user id to return the current user
 function get_Current_User(id) {
-  return c_users.find((p_user) => p_user.id === id);
+  return c_users[id];
 }
 
 // called when the user leaves the chat and its user object deleted from array
 function user_Disconnect(id) {
-  const index = c_users.findIndex((p_user) => p_user.id === id);
-
-  if (index !== -1) {
-    return c_users.splice(index, 1)[0];
-  }
+  c_users = omit(c_users, id);
+  return c_users;
 }
 
 module.exports = {
