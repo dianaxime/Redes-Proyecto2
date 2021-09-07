@@ -1,7 +1,5 @@
 var omit = require('lodash/omit');
 var shuffle = require('lodash/shuffle');
-var sampleSize = require('lodash/sampleSize');
-var remove = require('lodash/remove');
 
 let c_users = {};
 let c_rooms = {};
@@ -18,14 +16,14 @@ Un usuario se veria asi:
   username: "nombre"
   room: "room_#",
   turno: 1,
-  mano: []
+  deck: []
 }
 
 Una mesa/room se veria algo asi
 
 {
   room_name: "room_#",
-  cantidad_jugadores: 3,
+  c_players: 3,
   turno_actual: 2,
   cartas_mesa: [],
   ultima_jugada: [],
@@ -60,8 +58,8 @@ function join_User(id, username, room) {
   c_users[id] = p_user;
   console.log(c_users, "users");
 
-  c_rooms[room]['cantidad_jugadores'] = c_rooms[room]['cantidad_jugadores'] + 1;
-  c_rooms[room]['usuarios'] = [...c_rooms[room]['usuarios'], id];
+  c_rooms[room]['c_players'] = c_rooms[room]['c_players'] + 1;
+  c_rooms[room]['users'] = [...c_rooms[room]['users'], id];
   console.log(c_rooms, "rooms desde join user");
 
   return p_user;
@@ -81,7 +79,7 @@ function user_Disconnect(id) {
 }
 
 function create_Room(room) {
-  const p_room = { room, cantidad_jugadores: 0, turno_actual: -1, cartas_mesa: {}, ultima_jugada: {}, es_mentira: false, partida_iniciada: false, usuarios: []};
+  const p_room = { room, c_players: 0, turno_actual: -1, cartas_mesa: {}, ultima_jugada: {}, es_mentira: false, partida_iniciada: false, users: []};
 
   c_rooms[room] = p_room;
   console.log(c_rooms, "rooms desde create");
@@ -93,13 +91,13 @@ function check_Room(room) {
 
 function shuffle_Cards(room) {
   pool_cards = shuffle(pool_cards);
-  const cantidad = Math.floor(48 / c_rooms[room]['cantidad_jugadores']);
+  const cantidad = Math.floor(48 / c_rooms[room]['c_players']);
 
-  if (c_rooms[room]['cantidad_jugadores'] >= 3){
+  if (c_rooms[room]['c_players'] >= 3){
     
-    for (var i of c_rooms[room]['usuarios']){
+    for (var i of c_rooms[room]['users']){
       cartas_jugador = pool_cards.splice(0, cantidad)
-      c_users[i]['mano'] = cartas_jugador
+      c_users[i]['deck'] = cartas_jugador
       
     }
   }
