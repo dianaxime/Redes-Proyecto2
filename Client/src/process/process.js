@@ -6,7 +6,7 @@ function Process() {
 
   return (
     <div className="process">
-      <h5>
+      {/*<h5>
         Secret Key : <span>"uI2ooxtwHeI6q69PS98fx9SWVGbpQohO"</span>
       </h5>
       <div className="incoming">
@@ -16,7 +16,7 @@ function Process() {
       <div className="crypt">
         <h4>Decypted Data</h4>
         <p>{state.text}</p>
-      </div>
+      </div>*/}
     </div>
   );
 }

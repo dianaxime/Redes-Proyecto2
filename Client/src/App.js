@@ -1,6 +1,7 @@
 import Chat from "./chat/chat";
 import Process from "./process/process";
 import Home from "./home/home";
+import Board from "./board";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.scss";
 import React from "react";
@@ -10,16 +11,17 @@ const socket = io.connect('/');
 function Appmain(props) {
   return (
     <React.Fragment>
-      <div className="right">
-        <Chat
+      <div className="col-lg-8 col-md-6" >
+        <Board />
+      </div>
+      <div className="col-lg-4 col-md-6" >
+      <Chat
           username={props.match.params.username}
           roomname={props.match.params.roomname}
           socket={socket}
         />
-      </div>
-      <div className="left">
         <Process />
-      </div>
+  </div>
     </React.Fragment>
   );
 }

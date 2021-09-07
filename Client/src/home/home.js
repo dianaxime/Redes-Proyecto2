@@ -31,6 +31,7 @@ function Homepage({ socket }) {
       <Link to={`/chat/${roomname}/${username}`}>
         <button onClick={sendData}>Join</button>
       </Link>
+      
     </div>
   );
 }
