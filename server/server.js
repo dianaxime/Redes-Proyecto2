@@ -64,8 +64,6 @@ io.on("connection", (socket) => {
         username: p_user.username,
         text: `${p_user.username} se ha unido al juego`,
       });
-  
-      shuffle_Cards(roomname);
     }
   });
 
@@ -79,6 +77,21 @@ io.on("connection", (socket) => {
       username: p_user.username,
       text: text,
     });
+  });
+
+  // Inicio de partida y repartir cartas a los jugadores
+  socket.on("play", (room) => {
+    players = shuffle_Cards(room);
+    
+    // Envia la informacion de su turno y sus cartas a los jugadores de un room
+    for (var p_user of players){
+      io.to(p_user.room).emit("player", {
+        userId: p_user.id,
+        username: p_user.username,
+        turn: p_user.turn,
+        deck: p_user.deck,
+      });
+    }
   });
 
   //when the user exits the room

@@ -53,10 +53,14 @@ let pool_cards = [
 
 // joins the user to the specific chatroom
 function join_User(id, username, room) {
-  const p_user = { id, username, room };
+  const p_user = { id, username, room, turn: 'inactive', deck: []};
 
   c_users[id] = p_user;
   console.log(c_users, "users");
+  
+  if (c_rooms[room]['c_players'] == 0){
+    p_user['turn'] = 'liar'
+  }
 
   c_rooms[room]['c_players'] = c_rooms[room]['c_players'] + 1;
   c_rooms[room]['users'] = [...c_rooms[room]['users'], id];
@@ -94,6 +98,7 @@ function check_Started(room) {
 }
 
 function shuffle_Cards(room) {
+  let players = [];
   pool_cards = shuffle(pool_cards);
   const cantidad = Math.floor(48 / c_rooms[room]['c_players']);
 
@@ -102,10 +107,10 @@ function shuffle_Cards(room) {
     for (var i of c_rooms[room]['users']){
       cartas_jugador = pool_cards.splice(0, cantidad)
       c_users[i]['deck'] = cartas_jugador
-      
+      players = [...players, c_users[i]];
     }
   }
-
+  return players;
 }
 
 module.exports = {
