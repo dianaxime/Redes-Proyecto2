@@ -9,7 +9,8 @@ const {
   join_User,
   create_Room,
   check_Room,
-  shuffle_Cards 
+  shuffle_Cards,
+  check_Started 
 } = require("./dummyuser");
 
 app.use(express());
@@ -32,31 +33,40 @@ const io = socket(server);
 io.on("connection", (socket) => {
   //for a new user joining the room
   socket.on("joinRoom", ({ username, roomname }) => {
-    // Verificar si ya existe el room y si no lo crea
-    if (!check_Room(roomname)){
-      create_Room(roomname);
+    //Verificar si ya inicio la partida
+    if (check_Started(roomname)){
+      socket.emit("full_room", {
+        userId: socket.id,
+        username: username,
+        text: `Lo sentimos la partida ya ha iniciado`,
+      });
+    } else {
+      // Verificar si ya existe el room y si no lo crea
+      if (!check_Room(roomname)){
+        create_Room(roomname);
+      }
+  
+      //* create user
+      const p_user = join_User(socket.id, username, roomname);
+      console.log(socket.id, "=id");
+      socket.join(p_user.room);
+  
+      //display a welcome message to the user who have joined a room
+      socket.emit("message", {
+        userId: p_user.id,
+        username: p_user.username,
+        text: `Welcome ${p_user.username}`,
+      });
+  
+      //displays a joined room message to all other room users except that particular user
+      socket.broadcast.to(p_user.room).emit("message", {
+        userId: p_user.id,
+        username: p_user.username,
+        text: `${p_user.username} se ha unido al juego`,
+      });
+  
+      shuffle_Cards(roomname);
     }
-
-    //* create user
-    const p_user = join_User(socket.id, username, roomname);
-    console.log(socket.id, "=id");
-    socket.join(p_user.room);
-
-    //display a welcome message to the user who have joined a room
-    socket.emit("message", {
-      userId: p_user.id,
-      username: p_user.username,
-      text: `Welcome ${p_user.username}`,
-    });
-
-    //displays a joined room message to all other room users except that particular user
-    socket.broadcast.to(p_user.room).emit("message", {
-      userId: p_user.id,
-      username: p_user.username,
-      text: `${p_user.username} se ha unido al juego`,
-    });
-
-    shuffle_Cards(roomname);
   });
 
   //user sending message

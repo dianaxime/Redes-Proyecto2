@@ -79,7 +79,7 @@ function user_Disconnect(id) {
 }
 
 function create_Room(room) {
-  const p_room = { room, c_players: 0, turno_actual: -1, cartas_mesa: {}, ultima_jugada: {}, es_mentira: false, partida_iniciada: false, users: []};
+  const p_room = { room, c_players: 0, turn: -1, c_table: {}, last: {}, liar: false, p_started: false, users: []};
 
   c_rooms[room] = p_room;
   console.log(c_rooms, "rooms desde create");
@@ -89,12 +89,16 @@ function check_Room(room) {
   return c_rooms.hasOwnProperty(room);
 }
 
+function check_Started(room) {
+  return c_rooms.hasOwnProperty(room) && c_rooms[room]['p_started'];
+}
+
 function shuffle_Cards(room) {
   pool_cards = shuffle(pool_cards);
   const cantidad = Math.floor(48 / c_rooms[room]['c_players']);
 
   if (c_rooms[room]['c_players'] >= 3){
-    
+    c_rooms[room]['p_started'] = true;
     for (var i of c_rooms[room]['users']){
       cartas_jugador = pool_cards.splice(0, cantidad)
       c_users[i]['deck'] = cartas_jugador
@@ -110,5 +114,6 @@ module.exports = {
   user_Disconnect,
   create_Room,
   check_Room,
-  shuffle_Cards
+  shuffle_Cards,
+  check_Started
 };
