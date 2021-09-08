@@ -66,6 +66,15 @@ io.on("connection", (socket) => {
       });
 
       players = shuffle_Cards(roomname);
+      // Envia la informacion de su turno y sus cartas a los jugadores de un room
+      for (var p_user of players){
+        io.to(p_user.room).emit("player", {
+          userId: p_user.id,
+          username: p_user.username,
+          turn: p_user.turn,
+          deck: p_user.deck,
+        });
+      }
     }
   });
 
