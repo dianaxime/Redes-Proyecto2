@@ -17,30 +17,31 @@ function Chat({ username, roomname, socket }) {
     dispatch(process(encrypt, msg, cipher));
   };
 
-  const dispatchProcessPlayer = (encrypt, msg, turn) => {
-    dispatch(process(encrypt, msg, turn));
+  const dispatchProcessPlayer = (encrypt, msg, cipher) => {
+    dispatch(process(encrypt, msg, cipher));
   };
 
   useEffect(() => {
     socket.on("message", (data) => {
       //decypt
-      const ans = to_Decrypt(data.text, data.username);
-      dispatchProcess(false, ans, data.text);
-      console.log('MESSAGE',ans);
-      let temp = messages;
-      temp.push({
+      //const ans = to_Decrypt(data.username, data.text);
+      //dispatchProcess(false, ans, data.text);
+      //console.log('MESSAGE',ans);
+      //let temp = messages;
+     /* temp.push({
         userId: data.userId,
         username: data.username,
         text: ans,
       });
-      setMessages([...temp]);
+      setMessages([...temp]);*/
     });
 
     socket.on("player", (data) => {
       //decypt
-      const ans = to_Decrypt(data.userId, data.username, data.turn, data.deck);
-      dispatchProcessPlayer(false, ans, data.turn);
-      console.log('player',ans);
+      console.log('player sin decrypt',data);
+      //const ans = to_Decrypt(data.username, data.deck);
+      //dispatchProcessPlayer(false, ans, data.deck);
+      //console.log('player',ans);
       /*let temp = messages;
       temp.push({
         userId: data.userId,
@@ -52,9 +53,10 @@ function Chat({ username, roomname, socket }) {
 
     socket.on("full_room", (data) => {
        //decypt
-       const ans = to_Decrypt(data.text, data.username);
-       dispatchProcess(false, ans, data.text);
-       console.log('full_room',ans);
+       console.log('full_room',data);
+       //const ans = to_Decrypt(data.text, data.username);
+       //dispatchProcess(false, ans, data.text);
+       //console.log('full_room',ans);
        /*let temp = messages;
        temp.push({
          userId: data.userId,
