@@ -39,7 +39,7 @@ function Chat({ username, roomname, socket }) {
     socket.on("player", (data) => {
       //decypt
       const ans = to_Decrypt(data.userId, data.username, data.turn, data.deck);
-      dispatchProcess(false, ans, data.turn);
+      dispatchProcessPlayer(false, ans, data.turn);
       console.log('player',ans);
       /*let temp = messages;
       temp.push({
