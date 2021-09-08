@@ -64,6 +64,8 @@ io.on("connection", (socket) => {
         username: p_user.username,
         text: `${p_user.username} se ha unido al juego`,
       });
+
+      players = shuffle_Cards(roomname);
     }
   });
 

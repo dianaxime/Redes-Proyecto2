@@ -106,6 +106,8 @@ function shuffle_Cards(room) {
     c_rooms[room]['p_started'] = true;
     for (var i of c_rooms[room]['users']){
       cartas_jugador = pool_cards.splice(0, cantidad)
+      console.log(c_users[i])
+      console.log(cartas_jugador)
       c_users[i]['deck'] = cartas_jugador
       players = [...players, c_users[i]];
     }
