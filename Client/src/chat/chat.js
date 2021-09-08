@@ -7,11 +7,18 @@ import { useDispatch } from "react-redux";
 function Chat({ username, roomname, socket }) {
   const [text, setText] = useState("");
   const [messages, setMessages] = useState([]);
+  //const [player, setPlayer] = useState({});
+  //const [player, setPlayer] = useState({});
+
 
   const dispatch = useDispatch();
 
   const dispatchProcess = (encrypt, msg, cipher) => {
     dispatch(process(encrypt, msg, cipher));
+  };
+
+  const dispatchProcessPlayer = (encrypt, msg, turn) => {
+    dispatch(process(encrypt, msg, turn));
   };
 
   useEffect(() => {
@@ -28,6 +35,35 @@ function Chat({ username, roomname, socket }) {
       });
       setMessages([...temp]);
     });
+
+    socket.on("player", (data) => {
+      //decypt
+      const ans = to_Decrypt(data.userId, data.username, data.turn, data.deck);
+      dispatchProcess(false, ans, data.turn);
+      console.log('player',ans);
+      /*let temp = messages;
+      temp.push({
+        userId: data.userId,
+        username: data.username,
+        turn: ans,
+      });
+      setPlayer([...temp]);*/
+    });
+
+    socket.on("full_room", (data) => {
+       //decypt
+       const ans = to_Decrypt(data.text, data.username);
+       dispatchProcess(false, ans, data.text);
+       console.log('full_room',ans);
+       /*let temp = messages;
+       temp.push({
+         userId: data.userId,
+         username: data.username,
+         text: ans,
+       });
+       setFullRoom([...temp]);*/
+     });
+
   }, [socket]);
 
   const sendData = () => {
@@ -39,6 +75,12 @@ function Chat({ username, roomname, socket }) {
     }
   };
   const messagesEndRef = useRef(null);
+
+  const recivePlayer = () => {
+
+  }
+    
+
 
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
