@@ -22,6 +22,8 @@
   width: 80px;
   height: 100px;
   background-image: url("../assets/oros4.png");
+  background-size: contain;
+  background-repeat: no-repeat;
 
 }
 
