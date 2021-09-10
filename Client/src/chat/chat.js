@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 function Chat({ username, roomname, socket }) {
   const [text, setText] = useState("");
   const [messages, setMessages] = useState([]);
-  //const [player, setPlayer] = useState({});
+  const [player, setPlayer] = useState({});
   //const [player, setPlayer] = useState({});
 
 
@@ -34,10 +34,11 @@ function Chat({ username, roomname, socket }) {
 
     socket.on("player", (data) => {
       //decypt
-      console.log('player sin decrypt',data);
+      console.log('player sin decrypt', data);
+      const ans = to_Decrypt(JSON.stringify(data), data.username);
       //const ans = to_Decrypt(data.username, data.deck);
-      //dispatchProcessPlayer(false, ans, data.deck);
-      //console.log('player',ans);
+      dispatchProcess(false, ans, data.deck);
+      console.log('player', ans);
       /*let temp = messages;
       temp.push({
         userId: data.userId,

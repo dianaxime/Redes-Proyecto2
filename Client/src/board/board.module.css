@@ -1,14 +1,15 @@
 .board {
-  width: 100%;
+  width: 90%;
   height: 100%;
   background-color: #296317;
+  padding: 3%;
 }
 
 .gameboard{ 
-  display: grid;
+  /*display: grid;
   grid-template-columns: 120px 120px 120px 120px 120px 120px;
   grid-template-rows: 120px 120px 120px;
-  justify-content: center;
+  justify-content: center;*/
 }
 
 .box {
