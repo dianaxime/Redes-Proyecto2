@@ -17,23 +17,19 @@ function Chat({ username, roomname, socket }) {
     dispatch(process(encrypt, msg, cipher));
   };
 
-  const dispatchProcessPlayer = (encrypt, msg, cipher) => {
-    dispatch(process(encrypt, msg, cipher));
-  };
-
   useEffect(() => {
     socket.on("message", (data) => {
       //decypt
-      //const ans = to_Decrypt(data.username, data.text);
-      //dispatchProcess(false, ans, data.text);
+      const ans = to_Decrypt(data.text, data.username);
+      dispatchProcess(false, ans, data.text);
       //console.log('MESSAGE',ans);
-      //let temp = messages;
-     /* temp.push({
+      let temp = messages;
+      temp.push({
         userId: data.userId,
         username: data.username,
         text: ans,
       });
-      setMessages([...temp]);*/
+      setMessages([...temp]);
     });
 
     socket.on("player", (data) => {
@@ -76,12 +72,7 @@ function Chat({ username, roomname, socket }) {
       setText("");
     }
   };
-  const messagesEndRef = useRef(null);
-
-  const recivePlayer = () => {
-
-  }
-    
+  const messagesEndRef = useRef(null);  
 
 
   const scrollToBottom = () => {
