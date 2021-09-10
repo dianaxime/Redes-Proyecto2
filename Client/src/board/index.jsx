@@ -7,41 +7,36 @@ class Board extends Component {
 
   render() {
     const {
-      play
+      username,
+      on_turn,
+      deck,
     } = this.props;
     return (
       <div className={style.board}>
         <div className="row">
           <div className="col col-md-3">
-            <h4>Username:</h4> 
-               </div>
-               <div className="col col-md-3">
-            <h4>{/*user.username ? user.username : '' */}</h4> 
-               </div>
+            <h4>Username:</h4>
+          </div>
           <div className="col col-md-3">
-          <h4>On turn:</h4> </div>
+            <h4>{username ? username : ''}</h4>
+          </div>
           <div className="col col-md-3">
-            <h4>{/*play.on_turn ? play.on_turn: ''*/}</h4> 
-               </div>
-          {/* carta del player*/}
-          <div className={style.gameboard}>
-            {/*<div className={style.box}></div>
-          <div className={style.box}></div>
-          <div className={style.box}></div>
-          <div className={style.box}></div>
-          <div className={style.box}></div>
-    <div className={style.box}></div>*/}
+            <h4>On turn:</h4> </div>
+          <div className="col col-md-3">
+            <h4>{on_turn ? on_turn : ''}</h4>
           </div>
 
           {/* carta del player*/}
           <div className={style.gameboard}>
-            <Deck />
-            {/*<div className={style.box}></div>
-          <div className={style.box}></div>
-          <div className={style.box}></div>
-          <div className={style.box}></div>
-          <div className={style.box}></div>
-  <div className={style.box}></div>*/}
+            <div className="row">
+              {deck.lenght !== 0 ? deck.map((data) => (
+                <div className="col col-lg-2"> <Deck
+                  mass={data.palo}
+                  value={data.valor} />
+                </div>
+              )) : <>play to start</>}
+            </div>
+
           </div>
         </div>
       </div>
