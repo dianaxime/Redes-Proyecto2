@@ -2,20 +2,28 @@
   width: 500px;
   height: 500px;
   padding: 2rem;
-  background-color: #2d343e;
+  //background-color: #2d343e;
+  background-color: #296317;
   display: flex;
   justify-content: space-evenly;
   flex-direction: column;
   border-radius: 5px;
+  align-items: center;
+  
   input {
     height: 50px;
     width: 80%;
     background-color: #404450;
+    background-color: #194b0a;
     border: none;
+    color: azure;
     padding-left: 1rem;
     border-radius: 5px;
     &:focus {
       outline: none;
+    }
+    &:hover {
+      color: azure;
     }
   }
   button {
@@ -24,6 +32,7 @@
     width: 100px;
     border: none;
     background-color: #ffac41;
+    background-color: #E2D7C0;
     border-radius: 5px;
 
     color: black;

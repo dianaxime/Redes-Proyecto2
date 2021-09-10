@@ -59,17 +59,17 @@
 
       p {
         font-size: 1rem;
-        background-color: #250202;
+        background-color: #FEFB86;
         padding: 1rem;
         border-radius: 0px 10px 10px 10px;
         font-weight: 300;
-        color: #b4b6be;
+        color: #000000;
       }
 
       span {
         font-size: 0.6rem;
         font-weight: 200;
-        color: #b4b6be;
+        color: #808183;
         padding-left: 0.5rem;
       }
     }
@@ -113,7 +113,7 @@
     button {
       width: 20%;
       border: none;
-      background-color: $yellowColor;
+      background-color: #296317;
       border-radius: 0px 5px 5px 0px;
       &:hover {
         cursor: pointer;
