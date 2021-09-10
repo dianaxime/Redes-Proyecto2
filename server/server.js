@@ -105,6 +105,44 @@ io.on("connection", (socket) => {
     }
   });
 
+  // Recibar la movida del jugador y actualizar
+  socket.on("move", ({room, r_cards, lie }) => {
+    players = shuffle_Cards(room);
+    
+    // Envia la informacion de su turno actualizado
+    for (var p_user of players){
+      io.to(p_user.room).emit("change_turn", {
+        userId: p_user.id,
+        username: p_user.username,
+        turn: p_user.turn,
+      });
+    }
+  });
+
+  // Recibar si el jugador se cree la mentira o no
+  socket.on("guesser_choice", ({room, r_cards, lie }) => {
+    players = shuffle_Cards(room);
+    
+    // Envia la informacion de quien gano si el que miente o el que adivine
+    for (var p_user of players){
+      io.to(p_user.room).emit("turn_winner", {
+        userId: p_user.id,
+        username: p_user.username,
+        winner: p_user.turn,
+        new_deck: []
+      });
+    }
+  });
+
+  // Terminar la partida
+  socket.on("finish", (room) => {
+    // Enviar a todos quien fue el ganador
+    // Remplazar room con username del ganador
+    socket.broadcast.to(room).emit("winner", {
+      text: `El ganador es ${room}`,
+    });
+  });
+
   //when the user exits the room
   socket.on("disconnect", () => {
     //the user is deleted from array of users and a left room message displayed
