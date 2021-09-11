@@ -102,15 +102,13 @@ function shuffle_Cards(room) {
   pool_cards = shuffle(pool_cards);
   const cantidad = Math.floor(48 / c_rooms[room]['c_players']);
 
-  if (c_rooms[room]['c_players'] >= 3){
-    c_rooms[room]['p_started'] = true;
-    for (var i of c_rooms[room]['users']){
-      cartas_jugador = pool_cards.splice(0, cantidad)
-      console.log(c_users[i])
-      console.log(cartas_jugador)
-      c_users[i]['deck'] = cartas_jugador
-      players = [...players, c_users[i]];
-    }
+  c_rooms[room]['p_started'] = true;
+  for (var i of c_rooms[room]['users']){
+    cartas_jugador = pool_cards.splice(0, cantidad)
+    console.log(c_users[i])
+    console.log(cartas_jugador)
+    c_users[i]['deck'] = cartas_jugador
+    players = [...players, c_users[i]];
   }
   return players;
 }

@@ -73,17 +73,6 @@ io.on("connection", (socket) => {
         username: p_user.username,
         text: `${p_user.username} se ha unido al juego`,
       })));
-
-      players = shuffle_Cards(roomname);
-      // Envia la informacion de su turno y sus cartas a los jugadores de un room
-      for (var user of players){
-        io.to(user.room).emit("player", to_Encrypt(JSON.stringify({
-          userId: user.id,
-          username: user.username,
-          turn: user.turn,
-          deck: user.deck,
-        })));
-      }
     }
   });
 
@@ -102,6 +91,7 @@ io.on("connection", (socket) => {
 
   // Inicio de partida y repartir cartas a los jugadores
   socket.on("play", (room) => {
+    room = to_Decrypt(room);
     players = shuffle_Cards(room);
     
     // Envia la informacion de su turno y sus cartas a los jugadores de un room

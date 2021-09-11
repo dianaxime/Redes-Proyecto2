@@ -62,14 +62,9 @@ function Chat({ username, roomname, socket }) {
   const messagesEndRef = useRef(null);
 
   const startGame = () => {
-    if (text !== "") {
-      //encrypt here
-      console.log("lo que les mandamos en play sin encriptar",roomname )
-      const ans = to_Encrypt(roomname);
-      console.log('en play encriptado', ans)
-      socket.emit("play", ans);
-      setText("");
-    }
+    //encrypt here
+    const ans = to_Encrypt(roomname);
+    socket.emit("play", ans);
   }
 
   /* const scrollToBottom = () => {
