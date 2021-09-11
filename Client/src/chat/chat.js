@@ -21,8 +21,6 @@ function Chat({ username, roomname, socket }) {
     socket.on("message", (data) => {
       //decypt
       let ans = to_Decrypt(JSON.stringify(data));
-      // dispatchProcess(false, ans, data.text);
-      //console.log('MESSAGE',ans);
       ans = JSON.parse(ans);
       let temp = messages;
       temp.push({
@@ -37,7 +35,6 @@ function Chat({ username, roomname, socket }) {
       //decypt
       console.log('player sin decrypt', data);
       const ans = to_Decrypt(JSON.stringify(data));
-      //const ans = to_Decrypt(data.username, data.deck);
       dispatchProcess(false, ans, data.deck);
       console.log('player', ans);
       /*let temp = messages;

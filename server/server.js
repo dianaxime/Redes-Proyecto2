@@ -64,11 +64,11 @@ io.on("connection", (socket) => {
       })));
   
       //displays a joined room message to all other room users except that particular user
-      socket.broadcast.to(p_user.room).emit("message", {
+      socket.broadcast.to(p_user.room).emit("message", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
         text: `${p_user.username} se ha unido al juego`,
-      });
+      })));
 
       players = shuffle_Cards(roomname);
       // Envia la informacion de su turno y sus cartas a los jugadores de un room
@@ -89,11 +89,11 @@ io.on("connection", (socket) => {
     //gets the room user and the message sent
     const p_user = get_Current_User(socket.id);
 
-    io.to(p_user.room).emit("message", {
+    io.to(p_user.room).emit("message", to_Encrypt(JSON.stringify({
       userId: p_user.id,
       username: p_user.username,
       text: text,
-    });
+    })));
   });
 
   // Inicio de partida y repartir cartas a los jugadores
@@ -144,9 +144,9 @@ io.on("connection", (socket) => {
   socket.on("finish", (room) => {
     // Enviar a todos quien fue el ganador
     // Remplazar room con username del ganador
-    socket.broadcast.to(room).emit("winner", {
+    socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
       text: `El ganador es ${room}`,
-    });
+    })));
   });
 
   //when the user exits the room
@@ -155,11 +155,11 @@ io.on("connection", (socket) => {
     const p_user = user_Disconnect(socket.id);
 
     if (p_user) {
-      io.to(p_user.room).emit("message", {
+      io.to(p_user.room).emit("message", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
         text: `${p_user.username} ha dejado el chat`,
-      });
+      })));
     }
   });
 });
