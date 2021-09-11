@@ -64,7 +64,7 @@ io.on("connection", (socket) => {
       socket.emit("message", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
-        text: `Welcome ${p_user.username}`,
+        text: `Bienvenid@ ${p_user.username}`,
       })));
   
       //displays a joined room message to all other room users except that particular user
