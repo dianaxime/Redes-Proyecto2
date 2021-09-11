@@ -20,14 +20,15 @@ function Chat({ username, roomname, socket }) {
   useEffect(() => {
     socket.on("message", (data) => {
       //decypt
-      const ans = to_Decrypt(data.text, data.username);
-      dispatchProcess(false, ans, data.text);
+      let ans = to_Decrypt(JSON.stringify(data));
+      // dispatchProcess(false, ans, data.text);
       //console.log('MESSAGE',ans);
+      ans = JSON.parse(ans);
       let temp = messages;
       temp.push({
-        userId: data.userId,
-        username: data.username,
-        text: ans,
+        userId: ans.userId,
+        username: ans.username,
+        text: ans.text,
       });
       setMessages([...temp]);
     });
@@ -35,7 +36,7 @@ function Chat({ username, roomname, socket }) {
     socket.on("player", (data) => {
       //decypt
       console.log('player sin decrypt', data);
-      const ans = to_Decrypt(JSON.stringify(data), data.username);
+      const ans = to_Decrypt(JSON.stringify(data));
       //const ans = to_Decrypt(data.username, data.deck);
       dispatchProcess(false, ans, data.deck);
       console.log('player', ans);
@@ -69,6 +70,7 @@ function Chat({ username, roomname, socket }) {
     if (text !== "") {
       //encrypt here
       const ans = to_Encrypt(text);
+      console.log("Enviando...", ans)
       socket.emit("chat", ans);
       setText("");
     }

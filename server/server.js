@@ -57,11 +57,11 @@ io.on("connection", (socket) => {
       socket.join(p_user.room);
   
       //display a welcome message to the user who have joined a room
-      socket.emit("message", {
+      socket.emit("message", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
         text: `Welcome ${p_user.username}`,
-      });
+      })));
   
       //displays a joined room message to all other room users except that particular user
       socket.broadcast.to(p_user.room).emit("message", {
@@ -85,6 +85,7 @@ io.on("connection", (socket) => {
 
   //user sending message
   socket.on("chat", (text) => {
+    text = to_Decrypt(text);
     //gets the room user and the message sent
     const p_user = get_Current_User(socket.id);
 
