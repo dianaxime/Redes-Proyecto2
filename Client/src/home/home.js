@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./home.scss";
 import { Link } from "react-router-dom";
+import { to_Encrypt } from "../aes.js";
 
 function Homepage({ socket }) {
   const [username, setusername] = useState("");
@@ -8,7 +9,8 @@ function Homepage({ socket }) {
 
   const sendData = () => {
     if (username !== "" && roomname !== "") {
-      socket.emit("joinRoom", { username, roomname });
+      const ans = to_Encrypt(JSON.stringify({ username, roomname }));
+      socket.emit("joinRoom", ans);
     } else {
       alert("username and roomname are must !");
       window.location.reload();

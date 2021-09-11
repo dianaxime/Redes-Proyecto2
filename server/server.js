@@ -37,14 +37,18 @@ const io = socket(server);
 //initializing the socket io connection 
 io.on("connection", (socket) => {
   //for a new user joining the room
-  socket.on("joinRoom", ({ username, roomname }) => {
+  socket.on("joinRoom", (data) => {
+    data = to_Decrypt(data);
+    data = JSON.parse(data);
+    const { username, roomname } = data;
+
     //Verificar si ya inicio la partida
     if (check_Started(roomname)){
-      socket.emit("full_room", {
+      socket.emit("full_room", to_Encrypt(JSON.stringify({
         userId: socket.id,
         username: username,
         text: `Lo sentimos la partida ya ha iniciado`,
-      });
+      })));
     } else {
       // Verificar si ya existe el room y si no lo crea
       if (!check_Room(roomname)){
@@ -102,12 +106,12 @@ io.on("connection", (socket) => {
     
     // Envia la informacion de su turno y sus cartas a los jugadores de un room
     for (var p_user of players){
-      io.to(p_user.room).emit("player", {
+      io.to(p_user.room).emit("player", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
         turn: p_user.turn,
         deck: p_user.deck,
-      });
+      })));
     }
   });
 
@@ -117,11 +121,11 @@ io.on("connection", (socket) => {
     
     // Envia la informacion de su turno actualizado
     for (var p_user of players){
-      io.to(p_user.room).emit("change_turn", {
+      io.to(p_user.room).emit("change_turn", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
         turn: p_user.turn,
-      });
+      })));
     }
   });
 
@@ -131,12 +135,12 @@ io.on("connection", (socket) => {
     
     // Envia la informacion de quien gano si el que miente o el que adivine
     for (var p_user of players){
-      io.to(p_user.room).emit("turn_winner", {
+      io.to(p_user.room).emit("turn_winner", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
         winner: p_user.turn,
         new_deck: []
-      });
+      })));
     }
   });
 
