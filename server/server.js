@@ -13,6 +13,11 @@ const {
   check_Started 
 } = require("./dummyuser");
 
+const {
+  to_Encrypt,
+  to_Decrypt
+} = require("./aes")
+
 app.use(express());
 
 const port = 8000;
@@ -68,12 +73,12 @@ io.on("connection", (socket) => {
       players = shuffle_Cards(roomname);
       // Envia la informacion de su turno y sus cartas a los jugadores de un room
       for (var user of players){
-        io.to(user.room).emit("player", {
+        io.to(user.room).emit("player", to_Encrypt(JSON.stringify({
           userId: user.id,
           username: user.username,
           turn: user.turn,
           deck: user.deck,
-        });
+        })));
       }
     }
   });
