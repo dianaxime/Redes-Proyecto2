@@ -33,10 +33,9 @@ function Chat({ username, roomname, socket }) {
 
     socket.on("player", (data) => {
       //decypt
-      console.log('player sin decrypt', data);
-      const ans = to_Decrypt(JSON.stringify(data));
-      dispatchProcess(false, ans, data.deck);
-      console.log('player', ans);
+      let ans = to_Decrypt(JSON.stringify(data));
+      ans = JSON.parse(ans);
+      console.log('player', ans.deck);
       /*let temp = messages;
       temp.push({
         userId: data.userId,
@@ -67,7 +66,6 @@ function Chat({ username, roomname, socket }) {
     if (text !== "") {
       //encrypt here
       const ans = to_Encrypt(text);
-      console.log("Enviando...", ans)
       socket.emit("chat", ans);
       setText("");
     }
@@ -94,14 +92,14 @@ function Chat({ username, roomname, socket }) {
         {messages.map((i) => {
           if (i.username === username) {
             return (
-              <div className="message">
+              <div key={i.text} className="message">
                 <p>{i.text}</p>
                 <span>{i.username}</span>
               </div>
             );
           } else {
             return (
-              <div className="message mess-right">
+              <div key={i.text} className="message mess-right">
                 <p>{i.text} </p>
                 <span>{i.username}</span>
               </div>
