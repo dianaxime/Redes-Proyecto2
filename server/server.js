@@ -96,7 +96,7 @@ io.on("connection", (socket) => {
     
     // Envia la informacion de su turno y sus cartas a los jugadores de un room
     for (var p_user of players){
-      io.to(p_user.room).emit("player", to_Encrypt(JSON.stringify({
+      io.to(p_user.id).emit("player", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
         turn: p_user.turn,
