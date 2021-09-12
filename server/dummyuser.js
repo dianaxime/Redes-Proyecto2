@@ -83,7 +83,7 @@ function user_Disconnect(id) {
 }
 
 function create_Room(room) {
-  const p_room = { room, c_players: 0, turn: -1, c_table: {}, last: {}, liar: false, p_started: false, users: []};
+  const p_room = { room, c_players: 0, turn: -1, c_table: [], last: {}, liar: false, p_started: false, users: []};
 
   c_rooms[room] = p_room;
   console.log(c_rooms, "rooms desde create");
@@ -97,19 +97,32 @@ function check_Started(room) {
   return c_rooms.hasOwnProperty(room) && c_rooms[room]['p_started'];
 }
 
+function copy_Deck(array) {
+  for ( var i = 0, l = array.length, n_array = []; i < l; i++ ) {
+    n_array[ i ] = array[ i ];
+  }
+
+  return n_array;
+}
+
 function shuffle_Cards(room) {
   let players = [];
-  pool_cards = shuffle(pool_cards);
+  let temp_cards = copy_Deck(pool_cards);
+  temp_cards = shuffle(temp_cards);
   const cantidad = Math.floor(48 / c_rooms[room]['c_players']);
 
   c_rooms[room]['p_started'] = true;
+
   for (var i of c_rooms[room]['users']){
-    cartas_jugador = pool_cards.splice(0, cantidad)
+    cartas_jugador = temp_cards.splice(0, cantidad)
     console.log(c_users[i])
     console.log(cartas_jugador)
     c_users[i]['deck'] = cartas_jugador
     players = [...players, c_users[i]];
   }
+
+  c_rooms[room]['c_table'] = temp_cards;
+
   return players;
 }
 
