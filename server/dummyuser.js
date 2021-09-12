@@ -1,5 +1,8 @@
 var omit = require('lodash/omit');
 var shuffle = require('lodash/shuffle');
+var remove = require('lodash/remove');
+var isEqualWith = require('lodash/isEqualWith');
+var isEqual = require('lodash/isEqual');
 
 let c_users = {};
 let c_rooms = {};
@@ -121,8 +124,36 @@ function shuffle_Cards(room) {
     players = [...players, c_users[i]];
   }
 
+  c_rooms[room]['turn'] = 0;
   c_rooms[room]['c_table'] = temp_cards;
 
+  return players;
+}
+
+function process_Move(room, userId, r_cards, lie) {
+  function customizer(objValue, othValue) {
+      if (isEqual(objValue, othValue)) {
+        return true;
+      }
+  }
+
+  let players = [];
+  
+  if (isEqualWith(r_cards, lie, customizer)) {
+    c_rooms[room]['liar'] = true;
+  }
+
+  var n_deck = c_users[userId]['deck'];
+
+  for (var i of r_cards) {
+    n_deck = remove(n_deck, function(n) {
+      return isEqual(n, i);
+    });
+  }
+
+  c_users[userId]['deck'] = n_deck;
+
+  c_rooms[room]['turn'] = (c_rooms[room]['turn'] + 1) % c_rooms[room]['c_players'];
   return players;
 }
 
@@ -133,5 +164,6 @@ module.exports = {
   create_Room,
   check_Room,
   shuffle_Cards,
-  check_Started
+  check_Started,
+  process_Move
 };

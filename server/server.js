@@ -10,7 +10,8 @@ const {
   create_Room,
   check_Room,
   shuffle_Cards,
-  check_Started 
+  check_Started,
+  process_Move 
 } = require("./dummyuser");
 
 const {
@@ -109,16 +110,18 @@ io.on("connection", (socket) => {
   socket.on("move", (data) => {
     data = to_Decrypt(data);
     data = JSON.parse(data);
-    const { room, r_cards, lie } = data;
+    const { room, r_cards, lie, userId } = data;
+
+    players = process_Move(room, userId, r_cards, lie);
     
     // Envia la informacion de su turno actualizado
-    /*for (var p_user of players){
-      io.to(p_user.room).emit("change_turn", to_Encrypt(JSON.stringify({
+    for (var p_user of players){
+      io.to(p_user.id).emit("change_turn", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
         turn: p_user.turn,
       })));
-    }*/
+    }
   });
 
   // Recibar si el jugador se cree la mentira o no
