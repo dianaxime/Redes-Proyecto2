@@ -8,7 +8,7 @@ import Board from "../board";
 function Chat({ username, roomname, socket }) {
   const [text, setText] = useState("");
   const [messages, setMessages] = useState([]);
-  const [player, setPlayer] = useState({});
+  const [player, setPlayer] = useState([]);
   //const [player, setPlayer] = useState({});
 
 
@@ -87,7 +87,8 @@ function Chat({ username, roomname, socket }) {
     }
   }
 
-  const scrollToBottom = () => {
+  const scrollToBottom = () =>
+   {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
