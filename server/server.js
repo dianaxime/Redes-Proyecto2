@@ -110,9 +110,9 @@ io.on("connection", (socket) => {
   socket.on("move", (data) => {
     data = to_Decrypt(data);
     data = JSON.parse(data);
-    const { room, r_cards, lie, userId } = data;
+    const { room, r_cards, lie, userId, username } = data;
 
-    players = process_Move(room, userId, r_cards, lie);
+    const {players, lie_message } = process_Move(room, userId, r_cards, lie);
     
     // Envia la informacion de su turno actualizado
     for (var p_user of players){
@@ -122,6 +122,12 @@ io.on("connection", (socket) => {
         turn: p_user.turn,
       })));
     }
+
+    io.to(room).emit("message", to_Encrypt(JSON.stringify({
+      userId: userId,
+      username: username,
+      text: lie_message,
+    })));
   });
 
   // Recibar si el jugador se cree la mentira o no
