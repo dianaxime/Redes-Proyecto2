@@ -1,5 +1,8 @@
 var omit = require('lodash/omit');
 var shuffle = require('lodash/shuffle');
+var remove = require('lodash/remove');
+var isEqualWith = require('lodash/isEqualWith');
+var isEqual = require('lodash/isEqual');
 
 let c_users = {};
 let c_rooms = {};
@@ -34,21 +37,21 @@ Una mesa/room se veria algo asi
 */
 
 let pool_cards = [
-  { palo: 'oro', valor: 1}, { palo: 'oro', valor: 2}, { palo: 'oro', valor: 3}, { palo: 'oro', valor: 4},
-  { palo: 'oro', valor: 5}, { palo: 'oro', valor: 6}, { palo: 'oro', valor: 7}, { palo: 'oro', valor: 8},
-  { palo: 'oro', valor: 9}, { palo: 'oro', valor: 10}, { palo: 'oro', valor: 11}, { palo: 'oro', valor: 12},
+  { palo: 'oro', valor: 1, desc: 'Uno de Oro'}, { palo: 'oro', valor: 2, desc: 'Dos de Oro'}, { palo: 'oro', valor: 3, desc: 'Tres de Oro'}, { palo: 'oro', valor: 4, desc: 'Cuatro de Oro'},
+  { palo: 'oro', valor: 5, desc: 'Cinco de Oro'}, { palo: 'oro', valor: 6, desc: 'Seis de Oro'}, { palo: 'oro', valor: 7, desc: 'Siete de Oro'}, { palo: 'oro', valor: 8, desc: 'Ocho de Oro'},
+  { palo: 'oro', valor: 9, desc: 'Nueve de Oro'}, { palo: 'oro', valor: 10, desc: 'Diez de Oro'}, { palo: 'oro', valor: 11, desc: 'Once de Oro'}, { palo: 'oro', valor: 12, desc: 'Doce de Oro'},
 
-  { palo: 'copas', valor: 1}, { palo: 'copas', valor: 2}, { palo: 'copas', valor: 3}, { palo: 'copas', valor: 4},
-  { palo: 'copas', valor: 5}, { palo: 'copas', valor: 6}, { palo: 'copas', valor: 7}, { palo: 'copas', valor: 8},
-  { palo: 'copas', valor: 9}, { palo: 'copas', valor: 10}, { palo: 'copas', valor: 11}, { palo: 'copas', valor: 12},
+  { palo: 'copas', valor: 1, desc: 'Uno de Copas'}, { palo: 'copas', valor: 2, desc: 'Dos de Copas'}, { palo: 'copas', valor: 3, desc: 'Tres de Copas'}, { palo: 'copas', valor: 4, desc: 'Cuatro de Copas'},
+  { palo: 'copas', valor: 5, desc: 'Cinco de Copas'}, { palo: 'copas', valor: 6, desc: 'Seis de Copas'}, { palo: 'copas', valor: 7, desc: 'Siete de Copas'}, { palo: 'copas', valor: 8, desc: 'Ocho de Copas'},
+  { palo: 'copas', valor: 9, desc: 'Nueve de Copas'}, { palo: 'copas', valor: 10, desc: 'Diez de Copas'}, { palo: 'copas', valor: 11, desc: 'Once de Copas'}, { palo: 'copas', valor: 12, desc: 'Doce de Copas'},
 
-  { palo: 'espadas', valor: 1}, { palo: 'espadas', valor: 2}, { palo: 'espadas', valor: 3}, { palo: 'espadas', valor: 4},
-  { palo: 'espadas', valor: 5}, { palo: 'espadas', valor: 6}, { palo: 'espadas', valor: 7}, { palo: 'espadas', valor: 8},
-  { palo: 'espadas', valor: 9}, { palo: 'espadas', valor: 10}, { palo: 'espadas', valor: 11}, { palo: 'espadas', valor: 12},
+  { palo: 'espadas', valor: 1, desc: 'Uno de Oro'}, { palo: 'espadas', valor: 2, desc: 'Dos de Espadas'}, { palo: 'espadas', valor: 3, desc: 'Tres de Espadas'}, { palo: 'espadas', valor: 4, desc: 'Cuatro de Espadas'},
+  { palo: 'espadas', valor: 5, desc: 'Cinco de Oro'}, { palo: 'espadas', valor: 6, desc: 'Seis de Espadas'}, { palo: 'espadas', valor: 7, desc: 'Siete de Espadas'}, { palo: 'espadas', valor: 8, desc: 'Ocho de Espadas'},
+  { palo: 'espadas', valor: 9, desc: 'Nueve de Oro'}, { palo: 'espadas', valor: 10, desc: 'Diez de Espadas'}, { palo: 'espadas', valor: 11, desc: 'Once de Espadas'}, { palo: 'espadas', valor: 12, desc: 'Doce de Espadas'},
 
-  { palo: 'bastos', valor: 1}, { palo: 'bastos', valor: 2}, { palo: 'bastos', valor: 3}, { palo: 'bastos', valor: 4},
-  { palo: 'bastos', valor: 5}, { palo: 'bastos', valor: 6}, { palo: 'bastos', valor: 7}, { palo: 'bastos', valor: 8},
-  { palo: 'bastos', valor: 9}, { palo: 'bastos', valor: 10}, { palo: 'bastos', valor: 11}, { palo: 'bastos', valor: 12},
+  { palo: 'bastos', valor: 1, desc: 'Uno de Bastos'}, { palo: 'bastos', valor: 2, desc: 'Dos de Bastos'}, { palo: 'bastos', valor: 3, desc: 'Tres de Bastos'}, { palo: 'bastos', valor: 4, desc: 'Cuatro de Bastos'},
+  { palo: 'bastos', valor: 5, desc: 'Cinco de Bastos'}, { palo: 'bastos', valor: 6, desc: 'Seis de Bastos'}, { palo: 'bastos', valor: 7, desc: 'Siete de Bastos'}, { palo: 'bastos', valor: 8, desc: 'Ocho de Bastos'},
+  { palo: 'bastos', valor: 9, desc: 'Nueve de Bastos'}, { palo: 'bastos', valor: 10, desc: 'Diez de Bastos'}, { palo: 'bastos', valor: 11, desc: 'Once de Bastos'}, { palo: 'bastos', valor: 12, desc: 'Doce de Bastos'},
 ]
 
 // joins the user to the specific chatroom
@@ -83,7 +86,7 @@ function user_Disconnect(id) {
 }
 
 function create_Room(room) {
-  const p_room = { room, c_players: 0, turn: -1, c_table: {}, last: {}, liar: false, p_started: false, users: []};
+  const p_room = { room, c_players: 0, turn: -1, c_table: [], last: {}, liar: false, p_started: false, users: []};
 
   c_rooms[room] = p_room;
   console.log(c_rooms, "rooms desde create");
@@ -97,22 +100,82 @@ function check_Started(room) {
   return c_rooms.hasOwnProperty(room) && c_rooms[room]['p_started'];
 }
 
+function copy_Deck(array) {
+  for ( var i = 0, l = array.length, n_array = []; i < l; i++ ) {
+    n_array[ i ] = array[ i ];
+  }
+
+  return n_array;
+}
+
 function shuffle_Cards(room) {
   let players = [];
-  pool_cards = shuffle(pool_cards);
+  let temp_cards = copy_Deck(pool_cards);
+  temp_cards = shuffle(temp_cards);
   const cantidad = Math.floor(48 / c_rooms[room]['c_players']);
 
-  if (c_rooms[room]['c_players'] >= 3){
-    c_rooms[room]['p_started'] = true;
-    for (var i of c_rooms[room]['users']){
-      cartas_jugador = pool_cards.splice(0, cantidad)
-      console.log(c_users[i])
-      console.log(cartas_jugador)
-      c_users[i]['deck'] = cartas_jugador
-      players = [...players, c_users[i]];
-    }
+  c_rooms[room]['p_started'] = true;
+
+  for (var i of c_rooms[room]['users']){
+    cartas_jugador = temp_cards.splice(0, cantidad)
+    console.log(c_users[i])
+    console.log(cartas_jugador)
+    c_users[i]['deck'] = cartas_jugador
+    players = [...players, c_users[i]];
   }
+
+  c_rooms[room]['turn'] = 0;
+  c_rooms[room]['c_table'] = temp_cards;
+
   return players;
+}
+
+function process_Move(room, userId, r_cards, lie) {
+  let lies = [];
+  let falsehood = '';
+
+  for (var i of lie) {
+    for (var n = 0; n < i['quantity']; n++) {
+      lies.push({
+        palo: i['palo'],
+        valor: i['valor']
+      })
+    }
+    falsehood = falsehood + i['quantity'].toString() + i['desc'];
+  }
+
+  function customizer(objValue, othValue) {
+      if (isEqual(objValue, othValue)) {
+        return true;
+      }
+  }
+  
+  let players = [];
+  
+  if (isEqualWith(r_cards, lies, customizer)) {
+    c_rooms[room]['liar'] = true;
+  }
+
+  var n_deck = c_users[userId]['deck'];
+
+  for (var i of r_cards) {
+    n_deck = remove(n_deck, function(n) {
+      return isEqual(n, i);
+    });
+  }
+
+  c_users[userId]['deck'] = n_deck;
+
+  c_users[userId]['turn'] = 'inactive';
+  players.push(c_users[userId]);
+
+  c_rooms[room]['turn'] = (c_rooms[room]['turn'] + 1) % c_rooms[room]['c_players'];
+  c_users[c_rooms[room]['users'][c_rooms[room]['turn']]]['turn'] = 'guesser';
+  players.push(c_users[c_rooms[room]['users'][c_rooms[room]['turn']]]);
+
+
+  let result = {lie_message: falsehood, players: players};
+  return result;
 }
 
 module.exports = {
@@ -122,5 +185,6 @@ module.exports = {
   create_Room,
   check_Room,
   shuffle_Cards,
-  check_Started
+  check_Started,
+  process_Move
 };

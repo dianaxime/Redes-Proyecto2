@@ -10,8 +10,14 @@ const {
   create_Room,
   check_Room,
   shuffle_Cards,
-  check_Started 
+  check_Started,
+  process_Move 
 } = require("./dummyuser");
+
+const {
+  to_Encrypt,
+  to_Decrypt
+} = require("./aes")
 
 app.use(express());
 
@@ -32,14 +38,18 @@ const io = socket(server);
 //initializing the socket io connection 
 io.on("connection", (socket) => {
   //for a new user joining the room
-  socket.on("joinRoom", ({ username, roomname }) => {
+  socket.on("joinRoom", (data) => {
+    data = to_Decrypt(data);
+    data = JSON.parse(data);
+    const { username, roomname } = data;
+
     //Verificar si ya inicio la partida
     if (check_Started(roomname)){
-      socket.emit("full_room", {
+      socket.emit("full_room", to_Encrypt(JSON.stringify({
         userId: socket.id,
         username: username,
         text: `Lo sentimos la partida ya ha iniciado`,
-      });
+      })));
     } else {
       // Verificar si ya existe el room y si no lo crea
       if (!check_Room(roomname)){
@@ -52,71 +62,72 @@ io.on("connection", (socket) => {
       socket.join(p_user.room);
   
       //display a welcome message to the user who have joined a room
-      socket.emit("message", {
+      socket.emit("message", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
-        text: `Welcome ${p_user.username}`,
-      });
+        text: `Bienvenid@ ${p_user.username}`,
+      })));
   
       //displays a joined room message to all other room users except that particular user
-      socket.broadcast.to(p_user.room).emit("message", {
+      socket.broadcast.to(p_user.room).emit("message", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
         text: `${p_user.username} se ha unido al juego`,
-      });
-
-      players = shuffle_Cards(roomname);
-      // Envia la informacion de su turno y sus cartas a los jugadores de un room
-      for (var user of players){
-        io.to(user.room).emit("player", {
-          userId: user.id,
-          username: user.username,
-          turn: user.turn,
-          deck: user.deck,
-        });
-      }
+      })));
     }
   });
 
   //user sending message
   socket.on("chat", (text) => {
+    text = to_Decrypt(text);
     //gets the room user and the message sent
     const p_user = get_Current_User(socket.id);
 
-    io.to(p_user.room).emit("message", {
+    io.to(p_user.room).emit("message", to_Encrypt(JSON.stringify({
       userId: p_user.id,
       username: p_user.username,
       text: text,
-    });
+    })));
   });
 
   // Inicio de partida y repartir cartas a los jugadores
   socket.on("play", (room) => {
+    room = to_Decrypt(room);
     players = shuffle_Cards(room);
     
     // Envia la informacion de su turno y sus cartas a los jugadores de un room
     for (var p_user of players){
-      io.to(p_user.room).emit("player", {
+      io.to(p_user.id).emit("player", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
         turn: p_user.turn,
         deck: p_user.deck,
-      });
+      })));
     }
   });
 
   // Recibar la movida del jugador y actualizar
-  socket.on("move", ({room, r_cards, lie }) => {
-    players = shuffle_Cards(room);
+  socket.on("move", (data) => {
+    data = to_Decrypt(data);
+    data = JSON.parse(data);
+    const { room, r_cards, lie, userId, username } = data;
+
+    const {players, lie_message } = process_Move(room, userId, r_cards, lie);
     
     // Envia la informacion de su turno actualizado
     for (var p_user of players){
-      io.to(p_user.room).emit("change_turn", {
+      io.to(p_user.id).emit("change_turn", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
         turn: p_user.turn,
-      });
+      })));
     }
+
+    io.to(room).emit("message", to_Encrypt(JSON.stringify({
+      userId: userId,
+      username: username,
+      text: lie_message,
+    })));
   });
 
   // Recibar si el jugador se cree la mentira o no
@@ -125,12 +136,12 @@ io.on("connection", (socket) => {
     
     // Envia la informacion de quien gano si el que miente o el que adivine
     for (var p_user of players){
-      io.to(p_user.room).emit("turn_winner", {
+      io.to(p_user.room).emit("turn_winner", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
         winner: p_user.turn,
         new_deck: []
-      });
+      })));
     }
   });
 
@@ -138,9 +149,9 @@ io.on("connection", (socket) => {
   socket.on("finish", (room) => {
     // Enviar a todos quien fue el ganador
     // Remplazar room con username del ganador
-    socket.broadcast.to(room).emit("winner", {
+    socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
       text: `El ganador es ${room}`,
-    });
+    })));
   });
 
   //when the user exits the room
@@ -149,11 +160,11 @@ io.on("connection", (socket) => {
     const p_user = user_Disconnect(socket.id);
 
     if (p_user) {
-      io.to(p_user.room).emit("message", {
+      io.to(p_user.room).emit("message", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
         text: `${p_user.username} ha dejado el chat`,
-      });
+      })));
     }
   });
 });

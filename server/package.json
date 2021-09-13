@@ -5,11 +5,12 @@
   "main": "server.js",
   "scripts": {
     "start": "node server",
-    "dev": "nodemon server"
+    "dev": "nodemon server --ignore client"
   },
   "author": "Ephraim",
   "license": "MIT",
   "dependencies": {
+    "aes256": "^1.1.0",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",

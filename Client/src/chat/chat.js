@@ -1,8 +1,6 @@
 import "./chat.scss";
 import { to_Decrypt, to_Encrypt } from "../aes.js";
-import { process } from "../store/action/index";
 import React, { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
 import Board from "../board";
 
 function Chat({ username, roomname, socket }) {
@@ -21,39 +19,34 @@ function Chat({ username, roomname, socket }) {
   useEffect(() => {
     socket.on("message", (data) => {
       //decypt
-      const ans = to_Decrypt(data.text, data.username);
-      dispatchProcess(false, ans, data.text);
-      //console.log('MESSAGE',ans);
+      let ans = to_Decrypt(JSON.stringify(data));
+      ans = JSON.parse(ans);
       let temp = messages;
       temp.push({
-        userId: data.userId,
-        username: data.username,
-        text: ans,
+        userId: ans.userId,
+        username: ans.username,
+        text: ans.text,
       });
       setMessages([...temp]);
     });
 
     socket.on("player", (data) => {
       //decypt
-      console.log('player sin decrypt', data);
-      const ans = to_Decrypt(JSON.stringify(data), data.username);
-      //const ans = to_Decrypt(data.username, data.deck);
-      dispatchProcess(false, ans, data.deck);
+      let ans = to_Decrypt(JSON.stringify(data));
+      ans = JSON.parse(ans);
       console.log('player', ans);
-      let temp = player;
-      temp.push({
-        userId: data.userId,
-        username: data.username,
-        turn: ans,
+      setPlayer({
+        userId: ans.userId,
+        username: ans.username,
+        turn: ans.turn,
+        deck: ans.deck
       });
-      setPlayer([...temp]);
     });
 
     socket.on("full_room", (data) => {
       //decypt
       console.log('full_room', data);
       //const ans = to_Decrypt(data.text, data.username);
-      //dispatchProcess(false, ans, data.text);
       //console.log('full_room',ans);
       /*let temp = messages;
       temp.push({
@@ -77,29 +70,23 @@ function Chat({ username, roomname, socket }) {
   const messagesEndRef = useRef(null);
 
   const startGame = () => {
-    if (text !== "") {
-      //encrypt here
-      console.log("lo que les mandamos en play sin encriptar",roomname )
-      const ans = to_Encrypt(roomname);
-      console.log('en play encriptado', ans)
-      socket.emit("play", ans);
-      setText("");
-    }
+    //encrypt here
+    const ans = to_Encrypt(roomname);
+    socket.emit("play", ans);
   }
 
-  const scrollToBottom = () =>
-   {
+  /* const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(scrollToBottom, [messages]);
+  useEffect(scrollToBottom, [messages]); */
 
   console.log(messages, "mess");
 
   return (
     <div className="row">
       <div className="col col-lg-8">
-        {player.turn ?
+        {player.deck ?
           <Board
             username={'majo'}
             on_turn={'en turno'}
@@ -121,14 +108,14 @@ function Chat({ username, roomname, socket }) {
             {messages.map((i) => {
               if (i.username === username) {
                 return (
-                  <div className="message">
+                  <div key={i.text} className="message">
                     <p>{i.text}</p>
                     <span>{i.username}</span>
                   </div>
                 );
               } else {
                 return (
-                  <div className="message mess-right">
+                  <div key={i.text} className="message mess-right">
                     <p>{i.text} </p>
                     <span>{i.username}</span>
                   </div>
