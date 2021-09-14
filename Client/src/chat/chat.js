@@ -2,6 +2,7 @@ import "./chat.scss";
 import { to_Decrypt, to_Encrypt } from "../aes.js";
 import React, { useState, useEffect, useRef } from "react";
 import Board from "../board";
+import { useDispatch } from "react-redux";
 
 function Chat({ username, roomname, socket }) {
   const [text, setText] = useState("");
@@ -26,12 +27,14 @@ function Chat({ username, roomname, socket }) {
         userId: ans.userId,
         username: ans.username,
         text: ans.text,
+        flag: ans.flag
       });
       setMessages([...temp]);
     });
 
     socket.on("player", (data) => {
       //decypt
+      console.log(data)
       let ans = to_Decrypt(JSON.stringify(data));
       ans = JSON.parse(ans);
       console.log('player', ans);
@@ -71,11 +74,13 @@ function Chat({ username, roomname, socket }) {
 
   const startGame = () => {
     //encrypt here
+    console.log(roomname)
     const ans = to_Encrypt(roomname);
+    console.log(ans)
     socket.emit("play", ans);
   }
 
-  /* const scrollToBottom = () => {
+  /* const scrollToBottom = () =>   {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -88,14 +93,13 @@ function Chat({ username, roomname, socket }) {
       <div className="col col-lg-8">
         {player.deck ?
           <Board
-            username={'majo'}
-            on_turn={'en turno'}
-            deck={[{ palo: 'copas', valor: '1' }, { palo: 'oro', valor: '2' }, { palo: 'espada', valor: '3' },
-            { palo: 'copas', valor: '4' }, { palo: 'bastos', valor: '5' }, { palo: 'espada', valor: '6' }]}
+            username={player.username}
+            on_turn={player.turn}
+            deck={player.deck}
           /> :
           <><button onClick={startGame}>
             Iniciar partida</button>
-            </>}
+          </>}
       </div>
       <div className="col col-lg-4">
         <div className="chat">
@@ -114,12 +118,23 @@ function Chat({ username, roomname, socket }) {
                   </div>
                 );
               } else {
-                return (
-                  <div key={i.text} className="message mess-right">
-                    <p>{i.text} </p>
-                    <span>{i.username}</span>
-                  </div>
-                );
+                if (i.flag === 'message') {
+                  return (
+                    <div key={i.text} className="message mess-right">
+                      <p>{i.text} </p>
+                      <span>{i.username}</span>
+                    </div>
+                  );
+                }
+                else {
+                  return (
+                    /*este es el brodcast hay que cambiarle color*/
+                    <div key={i.text} className="message mess-right">
+                      <p>{i.text} </p>
+                      <span>{i.username}</span>
+                    </div>
+                  )
+                }
               }
             })}
             <div ref={messagesEndRef} />

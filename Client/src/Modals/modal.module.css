@@ -1,0 +1,11 @@
+.text {
+  color: black !important;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 10px;
+  width: 80%;
+  color: black;
+  padding: 15px;
+}
