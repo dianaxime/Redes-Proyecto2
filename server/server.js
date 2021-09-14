@@ -11,7 +11,8 @@ const {
   check_Room,
   shuffle_Cards,
   check_Started,
-  process_Move 
+  process_Move,
+  process_Choice 
 } = require("./dummyuser");
 
 const {
@@ -66,6 +67,7 @@ io.on("connection", (socket) => {
         userId: p_user.id,
         username: p_user.username,
         text: `Bienvenid@ ${p_user.username}`,
+        flag: `message`,
       })));
   
       //displays a joined room message to all other room users except that particular user
@@ -73,6 +75,7 @@ io.on("connection", (socket) => {
         userId: p_user.id,
         username: p_user.username,
         text: `${p_user.username} se ha unido al juego`,
+        flag: `message`,
       })));
     }
   });
@@ -87,6 +90,7 @@ io.on("connection", (socket) => {
       userId: p_user.id,
       username: p_user.username,
       text: text,
+      flag: `message`,
     })));
   });
 
@@ -127,20 +131,25 @@ io.on("connection", (socket) => {
       userId: userId,
       username: username,
       text: lie_message,
+      flag: `broadcast`,
     })));
   });
 
   // Recibar si el jugador se cree la mentira o no
-  socket.on("guesser_choice", ({room, r_cards, lie }) => {
-    players = shuffle_Cards(room);
+  socket.on("guesser_choice", (data) => {
+    data = to_Decrypt(data);
+    data = JSON.parse(data);
+    const {room, choice, userId } = data;
+
+    players = process_Choice(room, choice, userId);
     
     // Envia la informacion de quien gano si el que miente o el que adivine
     for (var p_user of players){
-      io.to(p_user.room).emit("turn_winner", to_Encrypt(JSON.stringify({
+      io.to(p_user.id).emit("turn_winner", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
-        winner: p_user.turn,
-        new_deck: []
+        turn: p_user.turn,
+        deck: p_user.deck
       })));
     }
   });

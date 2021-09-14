@@ -165,17 +165,45 @@ function process_Move(room, userId, r_cards, lie) {
   }
 
   c_users[userId]['deck'] = n_deck;
+  c_rooms[room]['c_table'] = [...c_rooms[room]['c_table'], ...r_cards]
 
   c_users[userId]['turn'] = 'inactive';
   players.push(c_users[userId]);
 
   c_rooms[room]['turn'] = (c_rooms[room]['turn'] + 1) % c_rooms[room]['c_players'];
-  c_users[c_rooms[room]['users'][c_rooms[room]['turn']]]['turn'] = 'guesser';
-  players.push(c_users[c_rooms[room]['users'][c_rooms[room]['turn']]]);
+
+  let a_userId;
+  a_userId = c_rooms[room]['users'][c_rooms[room]['turn']]['userId'];
+
+  c_users[a_userId]['turn'] = 'guesser';
+  players.push(c_users[a_userId]);
 
 
   let result = {lie_message: falsehood, players: players};
+
   return result;
+}
+
+function process_Choice(room, choice, userId) {
+  let players = [];
+  let b_userId = c_users[c_rooms[room]['users'][((c_rooms[room]['turn'] - 1) % c_rooms[room]['c_players'])]]['userId'];
+  
+  if (c_rooms[room]['liar'] == choice && choice == true) {
+    c_users[b_userId]['deck'] = [...c_users[b_userId]['deck'], ...c_rooms[room]['c_table']];
+    c_rooms[room]['c_table'] = [];
+  }
+
+  if (c_rooms[room]['liar'] != choice) {
+    c_users[userId]['deck'] = [...c_users[userId]['deck'], ...c_rooms[room]['c_table']];
+    c_rooms[room]['c_table'] = [];
+  }
+
+  c_users[userId]['turn'] = 'liar';
+
+  players.push(c_users[userId]);
+  players.push(c_users[b_userId]);
+
+  return players;
 }
 
 module.exports = {
@@ -186,5 +214,6 @@ module.exports = {
   check_Room,
   shuffle_Cards,
   check_Started,
-  process_Move
+  process_Move,
+  process_Choice
 };
