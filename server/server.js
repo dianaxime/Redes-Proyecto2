@@ -37,9 +37,9 @@ var server = app.listen(
 
 const io = socket(server);
 
-//initializing the socket io connection 
+// Inicializar la conexionn 
 io.on("connection", (socket) => {
-  //for a new user joining the room
+  // Cuando un usuario quiere unirse a un room
   socket.on("joinRoom", (data) => {
     data = to_Decrypt(data);
     data = JSON.parse(data);
@@ -58,11 +58,11 @@ io.on("connection", (socket) => {
         create_Room(roomname);
       }
   
-      //* create user
+      // Crea un usuario
       const p_user = join_User(socket.id, username, roomname);
       socket.join(p_user.room);
   
-      //display a welcome message to the user who have joined a room
+      // Muestra un mensaje de bienvenida
       socket.emit("message", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
@@ -70,7 +70,7 @@ io.on("connection", (socket) => {
         flag: `message`,
       })));
   
-      //displays a joined room message to all other room users except that particular user
+      // Muestra un mensaje a los jugadores del room que alguien se ha unido
       socket.broadcast.to(p_user.room).emit("message", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
@@ -80,10 +80,9 @@ io.on("connection", (socket) => {
     }
   });
 
-  //user sending message
+  // Envio de mensajes por el chat
   socket.on("chat", (text) => {
     text = to_Decrypt(text);
-    //gets the room user and the message sent
     const p_user = get_Current_User(socket.id);
 
     io.to(p_user.room).emit("message", to_Encrypt(JSON.stringify({
@@ -129,6 +128,7 @@ io.on("connection", (socket) => {
       })));
     }
 
+    // Envia a los jugadores del room cual fue la mentira
     io.to(room).emit("message", to_Encrypt(JSON.stringify({
       userId: p_user.id,
       username: p_user.username,
@@ -147,13 +147,16 @@ io.on("connection", (socket) => {
 
     const { game_over, p_winner, players } = process_Choice(room, choice, p_user.id);
 
-
+    // Si ya hay un ganador envia la informacion y termina el juego
     if (game_over) {
       socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
         text: `El ganador es ${p_winner.username}`,
       })));
     } else {
-      // Envia la informacion de quien gano si el que miente o el que adivine
+      /*
+       Envia la informacion actualizada de los turnos y del mazo 
+       de los usuarios
+      */
       for (var user of players){
         io.to(user.id).emit("turn_winner", to_Encrypt(JSON.stringify({
           userId: user.id,
@@ -170,8 +173,11 @@ io.on("connection", (socket) => {
   socket.on("finish", (room) => {
     room = to_Decrypt(room);
     const { q_w, n_winners } = define_Winner(room);
-    // Enviar a todos quien fue el ganador
-    // Remplazar room con username del ganador
+    
+    /* 
+      Enviar a todos quien fue el ganador, si hay mas 
+      de un ganador envia que hubo un empate
+    */
     if (q_w > 1) {
       socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
         text: `Hubo un empate entre ${n_winners}`,
@@ -183,9 +189,8 @@ io.on("connection", (socket) => {
     }
   });
 
-  //when the user exits the room
+  // Cuando el usuario se desconecta del juego se envia un mensaje por el chat
   socket.on("disconnect", () => {
-    //the user is deleted from array of users and a left room message displayed
     const p_user = user_Disconnect(socket.id);
 
     if (p_user) {
