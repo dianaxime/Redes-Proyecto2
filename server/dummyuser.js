@@ -134,6 +134,14 @@ function process_Move(room, userId, r_cards, lie) {
   let lies = [];
   let falsehood = '';
 
+  var n_deck = c_users[userId]['deck'];
+
+  for (var i of r_cards) {
+    n_deck = remove(n_deck, function(n) {
+      return !isEqual(n, i);
+    });
+  }
+
   for (var i of lie) {
     for (var n = 0; n < i['quantity']; n++) {
       lies.push({
@@ -154,14 +162,6 @@ function process_Move(room, userId, r_cards, lie) {
   
   if (isEqualWith(r_cards, lies, customizer)) {
     c_rooms[room]['liar'] = true;
-  }
-
-  var n_deck = c_users[userId]['deck'];
-
-  for (var i of r_cards) {
-    n_deck = remove(n_deck, function(n) {
-      return isEqual(n, i);
-    });
   }
 
   c_users[userId]['deck'] = n_deck;
