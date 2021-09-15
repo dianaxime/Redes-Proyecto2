@@ -6,6 +6,13 @@
   background-color: white;
   border-radius: 10px;
   width: 80%;
-  color: black;
+  color: black !important;
   padding: 15px;
+  margin-top:  10px;
+  margin-bottom:  10px;
+}
+
+.option {
+  color: black;
+  width: 100%;
 }
