@@ -48,73 +48,77 @@ const nums = [
 let lie = []
 let play = []
 
-export const Modal = ({
-  type,
-  closeModal,
-  deck
-}) => {
-  return (
-    <>
-      {type === 'lie' &&
-        <div className={styles.modal}>
-          Select your cards for lie
-          <hr></hr>
-          <div className='row'>
-            <div className="col col-md-6">
-              <label className={styles.text}>Palo </label>
-              <br />
-              <select className={styles.option}>
-                <option default hidden>--</option>
-                {palo.map((palo) => (
-                  <option className={styles.option} value={palo.value}>{palo.label}</option>
-                ))}
-              </select>
-            </div>
-            <div className="col col-md-6">
+class Modal extends Component {
 
-              <label className={styles.text}>Valor </label>
-              <select className={styles.option}>
-              <option default hidden>--</option>
-                {nums.map((nums) => (
-                  <option className={styles.option} value={nums.value}>{nums.label}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <br />
-          <div class="modal-footer">
-            <button type="button" >Save changes</button>
-            <button type="button" onClick={() => { closeModal() }}>Close</button>
-          </div>
-        </div>}
+  render() {
+    const {
+      type,
+      closeModal,
+      deck
+    } = this.props;
+    return (
+      <>
+        {type === 'lie' &&
+          <div className={styles.modal}>
+            Select your cards for lie
+            <hr></hr>
+            <div className='row'>
+              <div className="col col-md-6">
+                <label className={styles.text}>Palo </label>
+                <br />
+                <select className={styles.option}>
+                  <option default hidden>--</option>
+                  {palo.map((palo) => (
+                    <option className={styles.option} value={palo.value}>{palo.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="col col-md-6">
 
-      {type === 'play' &&
-        <div className={styles.modal}>
-        Select your cards for move
-        <hr></hr>
-        <div className='row'>
-          <div className="col col-md-6">
-            <label className={styles.text}>Palo </label>
+                <label className={styles.text}>Valor </label>
+                <select className={styles.option}>
+                  <option default hidden>--</option>
+                  {nums.map((nums) => (
+                    <option className={styles.option} value={nums.value}>{nums.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
             <br />
-            <select className={styles.option} onChange={(e) => {
-              play.push(e.target.value)
-            console.log(play)
-            }}>
-              <option default hidden>--</option>
-              {deck.map((palo, idx) => (
-                <option className={styles.option} value={idx}>{palo.desc} </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <br />
-        <div class="modal-footer">
-          <button type="button" >Save changes</button>
-          <button type="button" onClick={() => { closeModal() }}>Close</button>
-        </div>
-      </div>}
-    </>
-  )
+            <div class="modal-footer">
+              <button type="button" >Save changes</button>
+              <button type="button" onClick={() => { closeModal() }}>Close</button>
+            </div>
+          </div>}
+
+        {type === 'play' &&
+          <div className={styles.modal}>
+            Select your cards for move
+            <hr></hr>
+            <div className='row'>
+              <div className="col col-md-6">
+                <label className={styles.text}>Palo </label>
+                <br />
+                <select className={styles.option} onChange={(e) => {
+                  play.push(e.target.value)
+                  console.log(play)
+                }}>
+                  <option default hidden>--</option>
+                  {deck.map((palo, idx) => (
+                    <option className={styles.option} value={idx}>{palo.desc} </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <br />
+            <div class="modal-footer">
+              <button type="button" >Save changes</button>
+              <button type="button" onClick={() => { closeModal() }}>Close</button>
+            </div>
+          </div>}
+      </>
+    )
+  }
 }
 
 export default Modal;
