@@ -141,17 +141,25 @@ io.on("connection", (socket) => {
     data = JSON.parse(data);
     const {room, choice, userId } = data;
 
-    players = process_Choice(room, choice, userId);
-    
-    // Envia la informacion de quien gano si el que miente o el que adivine
-    for (var p_user of players){
-      io.to(p_user.id).emit("turn_winner", to_Encrypt(JSON.stringify({
-        userId: p_user.id,
-        username: p_user.username,
-        turn: p_user.turn,
-        deck: p_user.deck
+    const { game_over, p_winner, players } = process_Choice(room, choice, userId);
+
+
+    if (game_over) {
+      socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
+        text: `El ganador es ${p_winner.username}`,
       })));
+    } else {
+      // Envia la informacion de quien gano si el que miente o el que adivine
+      for (var p_user of players){
+        io.to(p_user.id).emit("turn_winner", to_Encrypt(JSON.stringify({
+          userId: p_user.id,
+          username: p_user.username,
+          turn: p_user.turn,
+          deck: p_user.deck
+        })));
+      }
     }
+    
   });
 
   // Terminar la partida

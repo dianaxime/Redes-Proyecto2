@@ -185,6 +185,8 @@ function process_Move(room, userId, r_cards, lie) {
 }
 
 function process_Choice(room, choice, userId) {
+  let p_winner = {};
+  let game_over = false;
   let players = [];
   let b_userId = c_users[c_rooms[room]['users'][((c_rooms[room]['turn'] - 1) % c_rooms[room]['c_players'])]]['userId'];
   
@@ -192,18 +194,25 @@ function process_Choice(room, choice, userId) {
     c_users[b_userId]['deck'] = [...c_users[b_userId]['deck'], ...c_rooms[room]['c_table']];
     c_rooms[room]['c_table'] = [];
   }
-
+  
   if (c_rooms[room]['liar'] != choice) {
     c_users[userId]['deck'] = [...c_users[userId]['deck'], ...c_rooms[room]['c_table']];
     c_rooms[room]['c_table'] = [];
   }
+  
+  if (c_users[b_userId]['deck'].length == 0) {
+    game_over = true;
+    p_winner = c_users[b_userId];
+  } else {
+    c_users[userId]['turn'] = 'liar';
+    
+    players.push(c_users[userId]);
+    players.push(c_users[b_userId]);
+  }
+  
+  let result = {p_winner: p_winner, game_over: game_over, players: players};
 
-  c_users[userId]['turn'] = 'liar';
-
-  players.push(c_users[userId]);
-  players.push(c_users[b_userId]);
-
-  return players;
+  return result;
 }
 
 module.exports = {
