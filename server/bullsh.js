@@ -54,12 +54,13 @@ let pool_cards = [
   { palo: 'bastos', valor: 9, desc: 'Nueve de Bastos'}, { palo: 'bastos', valor: 10, desc: 'Diez de Bastos'}, { palo: 'bastos', valor: 11, desc: 'Once de Bastos'}, { palo: 'bastos', valor: 12, desc: 'Doce de Bastos'},
 ]
 
-// joins the user to the specific chatroom
+// Inicializar a un jugador en un room especifico
 function join_User(id, username, room) {
   const p_user = { id, username, room, turn: 'inactive', deck: []};
 
   c_users[id] = p_user;
   
+  // Si no han hay ningun jugador el es el asignado como primer mentiroso
   if (c_rooms[room]['c_players'] == 0){
     p_user['turn'] = 'liar'
   }
@@ -70,31 +71,35 @@ function join_User(id, username, room) {
   return p_user;
 }
 
-// Gets a particular user id to return the current user
+// Devuelve el usuario asociado con ese id
 function get_Current_User(id) {
   return c_users[id];
 }
 
-// called when the user leaves the chat and its user object deleted from array
+// cuando un usuario se desconecta del juego y lo elimina
 function user_Disconnect(id) {
   c_users = omit(c_users, id);
   return c_users;
 }
 
+// inicializar un room
 function create_Room(room) {
   const p_room = { room, c_players: 0, turn: -1, c_table: [], last: {}, liar: false, p_started: false, users: []};
 
   c_rooms[room] = p_room;
 }
 
+// verifica si no existe un room con ese nombre
 function check_Room(room) {
   return c_rooms.hasOwnProperty(room);
 }
 
+// verifica que no se haya iniciado la partida en ese room
 function check_Started(room) {
   return c_rooms.hasOwnProperty(room) && c_rooms[room]['p_started'];
 }
 
+// hace una copia de ese arreglo
 function copy_Deck(array) {
   for ( var i = 0, l = array.length, n_array = []; i < l; i++ ) {
     n_array[ i ] = array[ i ];
@@ -103,20 +108,26 @@ function copy_Deck(array) {
   return n_array;
 }
 
+// Reparte las cartas entre los jugadores de ese room
 function shuffle_Cards(room) {
   let players = [];
   let temp_cards = copy_Deck(pool_cards);
   temp_cards = shuffle(temp_cards);
+
+  // Calcula cuantas cartas le corresponde a cada jugador
   const cantidad = Math.floor(48 / c_rooms[room]['c_players']);
 
+  // Marca la partida como iniciada
   c_rooms[room]['p_started'] = true;
 
+  // Reparte las cartas entre los jugadores del room
   for (var i of c_rooms[room]['users']){
     cartas_jugador = temp_cards.splice(0, cantidad)
     c_users[i]['deck'] = cartas_jugador
     players = [...players, c_users[i]];
   }
 
+  // Inicializa los turnos y si hay cartas restantes las deja en la mesa
   c_rooms[room]['turn'] = 0;
   c_rooms[room]['c_table'] = temp_cards;
 
@@ -129,12 +140,17 @@ function process_Move(room, userId, r_cards, lie) {
 
   var n_deck = c_users[userId]['deck'];
 
+  // Elimina las cartas que el jugador tiro de su mazo
   for (var i of r_cards) {
     n_deck = remove(n_deck, function(n) {
       return !isEqual(n, i);
     });
   }
 
+  /* 
+    Arregla el formato de la mentira del jugador y arma el mensaje
+    para los otros jugadores
+  */
   for (var i of lie) {
     for (var n = 0; n < i['quantity']; n++) {
       lies.push({
@@ -145,6 +161,7 @@ function process_Move(room, userId, r_cards, lie) {
     falsehood = falsehood + " , " + i['quantity'].toString() + " " + i['desc'];
   }
 
+  // funcion de comparacion
   function customizer(objValue, othValue) {
       if (isEqual(objValue, othValue)) {
         return true;
@@ -153,25 +170,30 @@ function process_Move(room, userId, r_cards, lie) {
   
   let players = [];
   
+  // verifica si la jugada es igual a la mentira
   if (isEqualWith(r_cards, lies, customizer)) {
     c_rooms[room]['liar'] = true;
   }
 
+  // Le asigna al jugador su mazo actualizado y actualiza la mesa
   c_users[userId]['deck'] = n_deck;
   c_rooms[room]['c_table'] = [...c_rooms[room]['c_table'], ...r_cards]
 
+  // Cambia el status del jugador actual a inactivo
   c_users[userId]['turn'] = 'inactive';
   players.push(c_users[userId]);
 
+  // Actualiza el turno en la mesa
   c_rooms[room]['turn'] = (c_rooms[room]['turn'] + 1) % c_rooms[room]['c_players'];
 
   let a_userId;
   a_userId = c_rooms[room]['users'][c_rooms[room]['turn']]['userId'];
 
+  // Cambia el status del sig jugador
   c_users[a_userId]['turn'] = 'guesser';
   players.push(c_users[a_userId]);
 
-
+  // Retorna el mensaje de mentira y el status actualizado de los jugadores
   let result = {lie_message: falsehood, players: players};
 
   return result;
@@ -181,18 +203,28 @@ function process_Choice(room, choice, userId) {
   let p_winner = {};
   let game_over = false;
   let players = [];
+  // Obtiene el id del jugador del turno anterior
   let b_userId = c_users[c_rooms[room]['users'][((c_rooms[room]['turn'] - 1) % c_rooms[room]['c_players'])]]['userId'];
   
+  /* 
+    Si adivina que el jugador miente el jugador previo 
+    se lleva todas las cartas
+  */
   if (c_rooms[room]['liar'] == choice && choice == true) {
     c_users[b_userId]['deck'] = [...c_users[b_userId]['deck'], ...c_rooms[room]['c_table']];
     c_rooms[room]['c_table'] = [];
   }
   
+  // Si no adivina el se lleva las cartas
   if (c_rooms[room]['liar'] != choice) {
     c_users[userId]['deck'] = [...c_users[userId]['deck'], ...c_rooms[room]['c_table']];
     c_rooms[room]['c_table'] = [];
   }
   
+  /*
+   Si el jugador anterior ya dejo todas sus cartas, y gano la
+   decision, ha ganado el juego
+  */ 
   if (c_users[b_userId]['deck'].length == 0) {
     game_over = true;
     p_winner = c_users[b_userId];
@@ -215,19 +247,28 @@ function define_Winner(room) {
   let n_winners = '';
   let q_w = 1;
   
+  // Para jugador en la mesa
   for (var i of c_rooms[room]['users']) {
     i_cards = c_users[i]['deck'].length
+
+    // Si tiene menos cartas que el anterior jugador con menos cartas
     if (i_cards < n_cards) {
+      // Guardamos la info del nuevo jugador
       q_w = 1;
       n_cards = i_cards;
       w_userId = i;
       n_winners = c_users[i]['username'];
     } else if (i_cards == n_cards) {
+      /*
+        Si hay dos con igual numero de cartas es empate y se muestra el
+        nombre de ambos y suma el numero de ganadores
+      */
       n_winners = n_winners + " , " + c_users[i]['username'];
       q_w++;
     }
   }
 
+  // Retorna el numero de ganadores y los nombres
   let result = {q_w: q_w, n_winners: n_winners};
 
   return result;
