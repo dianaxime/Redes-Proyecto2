@@ -14,7 +14,7 @@ const {
   process_Move,
   process_Choice,
   define_Winner 
-} = require("./dummyuser");
+} = require("./bullsh");
 
 const {
   to_Encrypt,
@@ -60,7 +60,6 @@ io.on("connection", (socket) => {
   
       //* create user
       const p_user = join_User(socket.id, username, roomname);
-      console.log(socket.id, "=id");
       socket.join(p_user.room);
   
       //display a welcome message to the user who have joined a room
@@ -101,12 +100,12 @@ io.on("connection", (socket) => {
     players = shuffle_Cards(room);
     
     // Envia la informacion de su turno y sus cartas a los jugadores de un room
-    for (var p_user of players){
-      io.to(p_user.id).emit("player", to_Encrypt(JSON.stringify({
-        userId: p_user.id,
-        username: p_user.username,
-        turn: p_user.turn,
-        deck: p_user.deck,
+    for (var user of players){
+      io.to(user.id).emit("player", to_Encrypt(JSON.stringify({
+        userId: user.id,
+        username: user.username,
+        turn: user.turn,
+        deck: user.deck,
       })));
     }
   });
@@ -115,22 +114,24 @@ io.on("connection", (socket) => {
   socket.on("move", (data) => {
     data = to_Decrypt(data);
     data = JSON.parse(data);
-    const { room, r_cards, lie, userId, username } = data;
+    const { room, r_cards, lie } = data;
+    
+    const p_user = get_Current_User(socket.id);
 
-    const {players, lie_message } = process_Move(room, userId, r_cards, lie);
+    const {players, lie_message } = process_Move(room, p_user.id, r_cards, lie);
     
     // Envia la informacion de su turno actualizado
-    for (var p_user of players){
-      io.to(p_user.id).emit("change_turn", to_Encrypt(JSON.stringify({
-        userId: p_user.id,
-        username: p_user.username,
-        turn: p_user.turn,
+    for (var user of players){
+      io.to(user.id).emit("change_turn", to_Encrypt(JSON.stringify({
+        userId: user.id,
+        username: user.username,
+        turn: user.turn,
       })));
     }
 
     io.to(room).emit("message", to_Encrypt(JSON.stringify({
-      userId: userId,
-      username: username,
+      userId: p_user.id,
+      username: p_user.username,
       text: lie_message,
       flag: `broadcast`,
     })));
@@ -140,9 +141,11 @@ io.on("connection", (socket) => {
   socket.on("guesser_choice", (data) => {
     data = to_Decrypt(data);
     data = JSON.parse(data);
-    const {room, choice, userId } = data;
+    const {room, choice } = data;
 
-    const { game_over, p_winner, players } = process_Choice(room, choice, userId);
+    const p_user = get_Current_User(socket.id);
+
+    const { game_over, p_winner, players } = process_Choice(room, choice, p_user.id);
 
 
     if (game_over) {
@@ -151,12 +154,12 @@ io.on("connection", (socket) => {
       })));
     } else {
       // Envia la informacion de quien gano si el que miente o el que adivine
-      for (var p_user of players){
-        io.to(p_user.id).emit("turn_winner", to_Encrypt(JSON.stringify({
-          userId: p_user.id,
-          username: p_user.username,
-          turn: p_user.turn,
-          deck: p_user.deck
+      for (var user of players){
+        io.to(user.id).emit("turn_winner", to_Encrypt(JSON.stringify({
+          userId: user.id,
+          username: user.username,
+          turn: user.turn,
+          deck: user.deck
         })));
       }
     }

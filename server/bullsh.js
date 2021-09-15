@@ -59,7 +59,6 @@ function join_User(id, username, room) {
   const p_user = { id, username, room, turn: 'inactive', deck: []};
 
   c_users[id] = p_user;
-  console.log(c_users, "users");
   
   if (c_rooms[room]['c_players'] == 0){
     p_user['turn'] = 'liar'
@@ -67,12 +66,9 @@ function join_User(id, username, room) {
 
   c_rooms[room]['c_players'] = c_rooms[room]['c_players'] + 1;
   c_rooms[room]['users'] = [...c_rooms[room]['users'], id];
-  console.log(c_rooms, "rooms desde join user");
-
+  
   return p_user;
 }
-
-console.log("user out", c_users);
 
 // Gets a particular user id to return the current user
 function get_Current_User(id) {
@@ -89,7 +85,6 @@ function create_Room(room) {
   const p_room = { room, c_players: 0, turn: -1, c_table: [], last: {}, liar: false, p_started: false, users: []};
 
   c_rooms[room] = p_room;
-  console.log(c_rooms, "rooms desde create");
 }
 
 function check_Room(room) {
@@ -118,8 +113,6 @@ function shuffle_Cards(room) {
 
   for (var i of c_rooms[room]['users']){
     cartas_jugador = temp_cards.splice(0, cantidad)
-    console.log(c_users[i])
-    console.log(cartas_jugador)
     c_users[i]['deck'] = cartas_jugador
     players = [...players, c_users[i]];
   }
