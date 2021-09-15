@@ -12,7 +12,8 @@ const {
   shuffle_Cards,
   check_Started,
   process_Move,
-  process_Choice 
+  process_Choice,
+  define_Winner 
 } = require("./dummyuser");
 
 const {
@@ -164,11 +165,19 @@ io.on("connection", (socket) => {
 
   // Terminar la partida
   socket.on("finish", (room) => {
+    room = to_Decrypt(room);
+    const { q_w, n_winners } = define_Winner(room);
     // Enviar a todos quien fue el ganador
     // Remplazar room con username del ganador
-    socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
-      text: `El ganador es ${room}`,
-    })));
+    if (q_w > 1) {
+      socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
+        text: `Hubo un empate entre ${n_winners}`,
+      })));
+    } else {
+      socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
+        text: `El ganador es ${n_winners}`,
+      })));
+    }
   });
 
   //when the user exits the room

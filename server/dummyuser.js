@@ -149,7 +149,7 @@ function process_Move(room, userId, r_cards, lie) {
         valor: i['valor']
       })
     }
-    falsehood = falsehood + i['quantity'].toString() + i['desc'];
+    falsehood = falsehood + " , " + i['quantity'].toString() + " " + i['desc'];
   }
 
   function customizer(objValue, othValue) {
@@ -215,6 +215,31 @@ function process_Choice(room, choice, userId) {
   return result;
 }
 
+function define_Winner(room) {
+  let n_cards = 48;
+  let w_userId = '';
+  let i_cards = 0;
+  let n_winners = '';
+  let q_w = 1;
+  
+  for (var i of c_rooms[room]['users']) {
+    i_cards = c_users[i]['deck'].length
+    if (i_cards < n_cards) {
+      q_w = 1;
+      n_cards = i_cards;
+      w_userId = i;
+      n_winners = c_users[i]['username'];
+    } else if (i_cards == n_cards) {
+      n_winners = n_winners + " , " + c_users[i]['username'];
+      q_w++;
+    }
+  }
+
+  let result = {q_w: q_w, n_winners: n_winners};
+
+  return result;
+}
+
 module.exports = {
   join_User,
   get_Current_User,
@@ -224,5 +249,6 @@ module.exports = {
   shuffle_Cards,
   check_Started,
   process_Move,
-  process_Choice
+  process_Choice,
+  define_Winner
 };
