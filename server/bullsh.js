@@ -135,7 +135,6 @@ function shuffle_Cards(room) {
 }
 
 function process_Move(room, userId, r_cards, lie) {
-  let lies = [];
   let falsehood = '';
 
   var n_deck = c_users[userId]['deck'];
@@ -152,13 +151,7 @@ function process_Move(room, userId, r_cards, lie) {
     para los otros jugadores
   */
   for (var i of lie) {
-    for (var n = 0; n < i['quantity']; n++) {
-      lies.push({
-        palo: i['palo'],
-        valor: i['valor']
-      })
-    }
-    falsehood = falsehood + " , " + i['quantity'].toString() + " " + i['desc'];
+    falsehood = falsehood + " , " + i['desc'];
   }
 
   // funcion de comparacion
@@ -171,7 +164,7 @@ function process_Move(room, userId, r_cards, lie) {
   let players = [];
   
   // verifica si la jugada es igual a la mentira
-  if (isEqualWith(r_cards, lies, customizer)) {
+  if (isEqualWith(r_cards, lie, customizer)) {
     c_rooms[room]['liar'] = true;
   }
 
