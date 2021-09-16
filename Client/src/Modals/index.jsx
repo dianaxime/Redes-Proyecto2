@@ -2,6 +2,7 @@
 //import { to_Decrypt, to_Encrypt } from "../aes.js";
 import React, { useState, useEffect, useRef } from "react";
 import styles from './modal.module.css';
+import { Component } from 'react';
 //import Board from "../board";
 //import { useDispatch } from "react-redux";
 
@@ -45,78 +46,251 @@ const nums = [
   { value: 12, label: 'Doce' }
 ]
 
-let lie = []
-let play = []
-
 class Modal extends Component {
+  constructor() {
+    super()
+    this.state = {
+      lie: [],
+      play: [],
+      onPlay: true,
+      onLie: false,
+      discardCard: [{ palo: '', valor: 0, desc: '' }],
+      newDeck: []
+    }
+  }
+
+  addElement = () => {
+    let items = [...this.state.lie];
+    items.push({ palo: '', valor: 0 })
+    console.log('items', items)
+    this.setState({
+      lie: items
+    })
+    console.log('hola', this.state.lie)
+  }
+
+  addMass = (mass, id) => {
+    console.log(this.state.lie)
+    console.log('maso', mass, id)
+    let items = [...this.state.lie];
+    let editableProcess = items[id];
+    editableProcess = {
+      palo: mass,
+      //value: (editableProcess.value ? editableProcess.value : '')
+    }
+    console.log('process', editableProcess)
+    /*this.setState({
+      //...this.state.selectedPO,
+      lie: items,
+    })
+    console.log('maso actualizado', this.state.lie)*/
+
+  }
+
+  addDiscardCard = () => {
+    let cards = [...this.state.discardCard]
+    console.log('estado actual', cards)
+    cards.push({ palo: '', valor: 0 })
+    this.setState({
+      discardCard: cards
+    })
+    console.log('discard card', this.state.discardCard)
+  }
+
+  removeCard = (id, deck, idxCard) => {
+    let cards = [...this.state.discardCard]
+    let newCard = deck[id]
+    console.log('antes', newCard)
+
+    if (cards[idxCard].valor !== 0) {
+      let updateId = cards[idxCard].id
+  
+      /*Ponemos el valor de la carta como enabled*/
+      let updateDeckOld = [...this.state.newDeck]
+      console.log('deck ANTES',updateDeckOld)
+
+      //console.log('elemnto a actualizar',updateDeckOld[updateId])
+      updateDeckOld[updateId] = {
+        palo: updateDeckOld[updateId].palo,
+        valor: updateDeckOld[updateId].valor,
+        desc: updateDeckOld[updateId].desc,
+        enabled: false,
+        id: updateDeckOld[updateId].id
+      }
+      console.log('Elemento Actualizado',updateDeckOld[updateId])
+      console.log('deck selecciondo',updateDeckOld)
+      
+      this.setState({
+        newDeck: updateDeckOld
+      })
+      console.log('updateddeck',this.state.newDeck)
+
+      /*se modifica la carda agregandola al deck*/
+      cards[idxCard] = newCard
+      this.setState({
+        discardCard: cards
+      })
+
+      /*Se cambia el valor de la carta seleccionada en el deck*/
+      let updateDeck = [...this.state.newDeck]
+      updateDeck[id] = {
+        palo: updateDeck[id].palo,
+        valor: updateDeck[id].valor,
+        desc: updateDeck[id].desc,
+        enabled: true,
+        id: updateDeck[id].id
+      }
+      this.setState({
+        newDeck: updateDeck
+      })
+      console.log('deckfinal IF ',this.state.newDeck, this.state.discardCard)
+    }
+    else {
+      cards[idxCard] = newCard
+      console.log('remove Card', cards)
+      this.setState({
+        discardCard: cards
+      })
+
+      /*Changes on deck*/
+      let updateDeck = [...this.state.newDeck]
+      updateDeck[id] = {
+        palo: updateDeck[id].palo,
+        valor: updateDeck[id].valor,
+        desc: updateDeck[id].desc,
+        enabled: true,
+        id: updateDeck[id].id
+      }
+      this.setState({
+        newDeck: updateDeck
+      })
+      console.log('deck final ELSE',this.state.newDeck)
+    }
+    return this.state.newDeck
+    //console.log('deckfinal FUERA IF',this.state.newDeck)
+  }
+
+  addValue = (value, id) => {
+    console.log('value', value, id)
+    let items = [...this.state.lie];
+    let editableProcess = items[id];
+    editableProcess = {
+      //palo: editableProcess.palo ? editableProcess.palo : undefined,
+      value: value
+    }
+    /*this.setState({
+      //...this.state.selectedPO,
+      lie: items,
+    })
+    console.log('valor actualizado', this.state.lie)*/
+
+  }
+
+  componentDidMount = () => {
+    let newDeck = this.props.deck.map((card,idx) => {
+      return {
+        palo: card.palo,
+        valor: card.valor,
+        desc: card.desc,
+        enabled: false,
+        id: idx
+      }
+    }
+    )
+    console.log('nuevo deck', newDeck)
+    this.setState({
+      newDeck: newDeck
+    })
+  }
 
   render() {
     const {
-      type,
       closeModal,
-      deck
+      deck,
+      saveChanges
     } = this.props;
     return (
-      <>
-        {type === 'lie' &&
+      <div>
+        {this.state.onLie === true &&
           <div className={styles.modal}>
             Select your cards for lie
             <hr></hr>
             <div className='row'>
-              <div className="col col-md-6">
-                <label className={styles.text}>Palo </label>
-                <br />
-                <select className={styles.option}>
-                  <option default hidden>--</option>
-                  {palo.map((palo) => (
-                    <option className={styles.option} value={palo.value}>{palo.label}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="col col-md-6">
-
-                <label className={styles.text}>Valor </label>
-                <select className={styles.option}>
-                  <option default hidden>--</option>
-                  {nums.map((nums) => (
-                    <option className={styles.option} value={nums.value}>{nums.label}</option>
-                  ))}
-                </select>
-              </div>
+              {
+                this.state.discardCard.map((cards, idx) => (
+                  <>
+                    <div className="col col-md-6">
+                      <label className={styles.text}>Palo </label>
+                      <br />
+                      <select className={styles.option} onChange={(e) => {
+                        this.addMass(e.target.value, idx)
+                      }}
+                      >
+                        <option default hidden>--</option>
+                        {palo.map((palo) => (
+                          <option className={styles.option} value={palo.value}>{palo.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="col col-md-6">
+                      <label className={styles.text}>Valor </label>
+                      <select className={styles.option} onChange={(e) => {
+                        this.addValue(e.target.value, idx)
+                      }}>
+                        <option default hidden>--</option>
+                        {nums.map((nums) => (
+                          <option className={styles.option} value={nums.value}>{nums.label}</option>
+                        ))}
+                      </select>
+                    </div></>))}
             </div>
             <br />
             <div class="modal-footer">
-              <button type="button" >Save changes</button>
+              {this.state.doneLie && <button type="button" onClick={() => { saveChanges('hols') }}>Save changes</button>}
               <button type="button" onClick={() => { closeModal() }}>Close</button>
             </div>
           </div>}
 
-        {type === 'play' &&
+        {this.state.onPlay === true &&
           <div className={styles.modal}>
             Select your cards for move
+            <button type="button" onClick={() => {
+              this.addDiscardCard()
+            }}> + </button>
             <hr></hr>
             <div className='row'>
               <div className="col col-md-6">
                 <label className={styles.text}>Palo </label>
                 <br />
-                <select className={styles.option} onChange={(e) => {
-                  play.push(e.target.value)
-                  console.log(play)
-                }}>
-                  <option default hidden>--</option>
-                  {deck.map((palo, idx) => (
-                    <option className={styles.option} value={idx}>{palo.desc} </option>
-                  ))}
-                </select>
+                {this.state.discardCard.map((disCard, idxCard) => (
+                  <>
+                    <select className={styles.option} onChange={(e) => {
+                      this.removeCard(e.target.value, this.state.newDeck, idxCard)
+                      //console.log(e.target.value)
+                    }}>
+                      <option default hidden>--</option>
+                      {this.state.newDeck.map((palo, idx) => (
+                        <option className={styles.option} value={idx} hidden={palo.enabled}>{palo.desc} </option>
+                      ))}
+                    </select>
+                    <div className={styles.spacio}></div>
+                  </>
+                ))}
               </div>
             </div>
             <br />
             <div class="modal-footer">
-              <button type="button" >Save changes</button>
+              <button type="button" className="primary" onClick={() => {
+                this.setState({
+                  onPlay: false,
+                  onLie: true
+                })
+              }}>Save changes</button>
               <button type="button" onClick={() => { closeModal() }}>Close</button>
             </div>
+
           </div>}
-      </>
+      </div>
     )
   }
 }

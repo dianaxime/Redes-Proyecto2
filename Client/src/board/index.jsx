@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Component } from 'react';
 import Deck from '../Deck';
 import style from './board.module.css';
-import { Modal } from '../Modals';
+import  Modal  from '../Modals';
 
 class Board extends Component {
   constructor() {
@@ -10,6 +10,7 @@ class Board extends Component {
     this.state = {
       lieModal: false,
       playModal: false,
+      //lenghtD: [1, 2]
       //guess: undefined
     }
   }
@@ -26,7 +27,10 @@ class Board extends Component {
       playModal: !this.state.playModal
     });
     console.log(this.state.playModal)
+  }
 
+  sendLie = (lie) => {
+    console.log(lie)
   }
 
   render() {
@@ -78,23 +82,24 @@ class Board extends Component {
           </div>
           <br />
           <div className="col col-md-12">
-            
+            hola
             {/* aqui llamamos a los forms de */}
             {this.state.lieModal === true &&
               <Modal
                 type={'lie'}
                 closeModal={this.formLie}
-                saveChanges={'hola'}
+                saveChanges={this.sendLie}
                 deck={deck}
+                lenghtD={[1,2]}
               />
             }
-            {this.state.playModal === true &&
+            {/*this.state.playModal === true &&
               <Modal
                 type={'play'}
                 closeModal={this.formPlay}
                 saveChanges={'hola'}
                 deck={deck}
-              />}
+            />*/}
           </div>
           {/* cartas del player*/}
           <div className={style.gameboard}>
