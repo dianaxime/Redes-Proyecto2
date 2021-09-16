@@ -125,6 +125,7 @@ io.on("connection", (socket) => {
         userId: user.id,
         username: user.username,
         turn: user.turn,
+        deck: user.deck,
       })));
     }
 
