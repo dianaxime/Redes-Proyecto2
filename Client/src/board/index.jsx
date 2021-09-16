@@ -38,6 +38,8 @@ class Board extends Component {
       username,
       on_turn,
       deck,
+      socket,
+      roomname
 
     } = this.props;
     return (
@@ -82,8 +84,9 @@ class Board extends Component {
           </div>
           <br />
           <div className="col col-md-12">
-            hola
+            
             {/* aqui llamamos a los forms de */}
+            
             {this.state.lieModal === true &&
               <Modal
                 type={'lie'}
@@ -91,6 +94,8 @@ class Board extends Component {
                 saveChanges={this.sendLie}
                 deck={deck}
                 lenghtD={[1,2]}
+                socket={socket}
+                roomname={roomname}
               />
             }
             {/*this.state.playModal === true &&

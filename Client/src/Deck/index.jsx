@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { Component } from 'react';
 import style from './deck.module.css';
 
-//const maso = {palo:'copas', valor: '1'}
-
 class Deck extends Component {
   render() {
     const {

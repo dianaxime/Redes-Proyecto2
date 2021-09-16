@@ -1,10 +1,10 @@
-//import "./chat.scss";
-//import { to_Decrypt, to_Encrypt } from "../aes.js";
 import React, { useState, useEffect, useRef } from "react";
 import styles from './modal.module.css';
 import { Component } from 'react';
-//import Board from "../board";
-//import { useDispatch } from "react-redux";
+import Select from "react-dropdown-select";
+import { to_Decrypt, to_Encrypt } from "../aes.js";
+import styled from "@emotion/styled";
+
 
 const pool_cards = [
   { palo: 'oro', valor: 1, desc: 'Uno de Oro' }, { palo: 'oro', valor: 2, desc: 'Dos de Oro' }, { palo: 'oro', valor: 3, desc: 'Tres de Oro' }, { palo: 'oro', valor: 4, desc: 'Cuatro de Oro' },
@@ -24,188 +24,116 @@ const pool_cards = [
   { palo: 'bastos', valor: 9, desc: 'Nueve de Bastos' }, { palo: 'bastos', valor: 10, desc: 'Diez de Bastos' }, { palo: 'bastos', valor: 11, desc: 'Once de Bastos' }, { palo: 'bastos', valor: 12, desc: 'Doce de Bastos' },
 ]
 
-const palo = [
-  { value: 'oro', label: 'oro' },
-  { value: 'copas', label: 'copas' },
-  { value: 'espadas', label: 'espadas' },
-  { value: 'bastos', label: 'bastos' }
-]
-
-const nums = [
-  { value: 1, label: 'Uno' },
-  { value: 2, label: 'Dos' },
-  { value: 2, label: 'Tres' },
-  { value: 4, label: 'Cuatro' },
-  { value: 5, label: 'Cinco' },
-  { value: 6, label: 'Seis' },
-  { value: 7, label: 'Siete' },
-  { value: 8, label: 'Ocho' },
-  { value: 9, label: 'Nueve' },
-  { value: 10, label: 'Diez' },
-  { value: 11, label: 'Once' },
-  { value: 12, label: 'Doce' }
-]
 
 class Modal extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       lie: [],
       play: [],
       onPlay: true,
       onLie: false,
       discardCard: [{ palo: '', valor: 0, desc: '' }],
-      newDeck: []
+      newDeck: [],
+      multi: true,
+      disabled: false,
+      loading: false,
+      contentRenderer: false,
+      dropdownRenderer: false,
+      inputRenderer: false,
+      itemRenderer: false,
+      optionRenderer: false,
+      noDataRenderer: false,
+      selectValues: [],
+      selectValuesLie: [],
+      //searchBy: "username",
+      clearable: false,
+      searchable: true,
+      create: false,
+      separator: false,
+      forceOpen: false,
+      handle: true,
+      addPlaceholder: "+ click to add",
+      //labelField: "username",
+      //valueField: "email",
+      color: "#0074D9",
+      keepSelectedInList: true,
+      closeOnSelect: false,
+      dropdownPosition: "bottom",
+      direction: "ltr",
+      dropdownHeight: "300px"
     }
   }
 
-  addElement = () => {
-    let items = [...this.state.lie];
-    items.push({ palo: '', valor: 0 })
-    console.log('items', items)
-    this.setState({
-      lie: items
-    })
-    console.log('hola', this.state.lie)
-  }
+  setValues = selectValues => this.setState({ selectValues });
 
-  addMass = (mass, id) => {
-    console.log(this.state.lie)
-    console.log('maso', mass, id)
-    let items = [...this.state.lie];
-    let editableProcess = items[id];
-    editableProcess = {
-      palo: mass,
-      //value: (editableProcess.value ? editableProcess.value : '')
-    }
-    console.log('process', editableProcess)
-    /*this.setState({
-      //...this.state.selectedPO,
-      lie: items,
-    })
-    console.log('maso actualizado', this.state.lie)*/
+  setValuesLie = selectValuesLie => this.setState({ selectValuesLie });
 
-  }
-
-  addDiscardCard = () => {
-    let cards = [...this.state.discardCard]
-    console.log('estado actual', cards)
-    cards.push({ palo: '', valor: 0 })
-    this.setState({
-      discardCard: cards
-    })
-    console.log('discard card', this.state.discardCard)
-  }
-
-  removeCard = (id, deck, idxCard) => {
-    let cards = [...this.state.discardCard]
-    let newCard = deck[id]
-    console.log('antes', newCard)
-
-    if (cards[idxCard].valor !== 0) {
-      let updateId = cards[idxCard].id
-  
-      /*Ponemos el valor de la carta como enabled*/
-      let updateDeckOld = [...this.state.newDeck]
-      console.log('deck ANTES',updateDeckOld)
-
-      //console.log('elemnto a actualizar',updateDeckOld[updateId])
-      updateDeckOld[updateId] = {
-        palo: updateDeckOld[updateId].palo,
-        valor: updateDeckOld[updateId].valor,
-        desc: updateDeckOld[updateId].desc,
-        enabled: false,
-        id: updateDeckOld[updateId].id
-      }
-      console.log('Elemento Actualizado',updateDeckOld[updateId])
-      console.log('deck selecciondo',updateDeckOld)
-      
-      this.setState({
-        newDeck: updateDeckOld
-      })
-      console.log('updateddeck',this.state.newDeck)
-
-      /*se modifica la carda agregandola al deck*/
-      cards[idxCard] = newCard
-      this.setState({
-        discardCard: cards
-      })
-
-      /*Se cambia el valor de la carta seleccionada en el deck*/
-      let updateDeck = [...this.state.newDeck]
-      updateDeck[id] = {
-        palo: updateDeck[id].palo,
-        valor: updateDeck[id].valor,
-        desc: updateDeck[id].desc,
-        enabled: true,
-        id: updateDeck[id].id
-      }
-      this.setState({
-        newDeck: updateDeck
-      })
-      console.log('deckfinal IF ',this.state.newDeck, this.state.discardCard)
-    }
-    else {
-      cards[idxCard] = newCard
-      console.log('remove Card', cards)
-      this.setState({
-        discardCard: cards
-      })
-
-      /*Changes on deck*/
-      let updateDeck = [...this.state.newDeck]
-      updateDeck[id] = {
-        palo: updateDeck[id].palo,
-        valor: updateDeck[id].valor,
-        desc: updateDeck[id].desc,
-        enabled: true,
-        id: updateDeck[id].id
-      }
-      this.setState({
-        newDeck: updateDeck
-      })
-      console.log('deck final ELSE',this.state.newDeck)
-    }
-    return this.state.newDeck
-    //console.log('deckfinal FUERA IF',this.state.newDeck)
-  }
-
-  addValue = (value, id) => {
-    console.log('value', value, id)
-    let items = [...this.state.lie];
-    let editableProcess = items[id];
-    editableProcess = {
-      //palo: editableProcess.palo ? editableProcess.palo : undefined,
-      value: value
-    }
-    /*this.setState({
-      //...this.state.selectedPO,
-      lie: items,
-    })
-    console.log('valor actualizado', this.state.lie)*/
-
-  }
-
-  componentDidMount = () => {
-    let newDeck = this.props.deck.map((card,idx) => {
+  sendMove = (socket, roomname) => {
+    let r_cards = this.state.selectValues.map((card, idx) => {
       return {
         palo: card.palo,
         valor: card.valor,
         desc: card.desc,
+      }
+    })
+
+    let lie = this.state.selectValuesLie.map((card, idx) => {
+      return {
+        palo: card.palo,
+        valor: card.valor,
+        desc: card.desc,
+      }
+    })
+
+    let move = {
+      room: roomname,
+      r_cards: r_cards,
+      lie: lie
+    }
+    console.log('movimiento completo',move)
+    //encrypt here
+    const ans = to_Encrypt(JSON.stringify(move));
+    socket.emit("move", ans);
+
+  };
+
+  componentDidMount = () => {
+    let newDeck = this.props.deck.map((card, idx) => {
+      return {
+        palo: card.palo,
+        valor: card.valor,
+        label: card.desc,
+        value: idx,
+        desc: card.desc,
         enabled: false,
         id: idx
       }
-    }
-    )
-    console.log('nuevo deck', newDeck)
+    })
+
+    let allCards = pool_cards.map((card, idx) => {
+      return {
+        palo: card.palo,
+        valor: card.valor,
+        label: card.desc,
+        value: idx,
+        desc: card.desc,
+        enabled: false,
+        id: idx
+      }
+    })
+
     this.setState({
-      newDeck: newDeck
+      newDeck: newDeck,
+      allCards: allCards
     })
   }
 
   render() {
     const {
       closeModal,
+      socket,
+      roomname,
       deck,
       saveChanges
     } = this.props;
@@ -216,37 +144,24 @@ class Modal extends Component {
             Select your cards for lie
             <hr></hr>
             <div className='row'>
-              {
-                this.state.discardCard.map((cards, idx) => (
-                  <>
-                    <div className="col col-md-6">
-                      <label className={styles.text}>Palo </label>
-                      <br />
-                      <select className={styles.option} onChange={(e) => {
-                        this.addMass(e.target.value, idx)
-                      }}
-                      >
-                        <option default hidden>--</option>
-                        {palo.map((palo) => (
-                          <option className={styles.option} value={palo.value}>{palo.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="col col-md-6">
-                      <label className={styles.text}>Valor </label>
-                      <select className={styles.option} onChange={(e) => {
-                        this.addValue(e.target.value, idx)
-                      }}>
-                        <option default hidden>--</option>
-                        {nums.map((nums) => (
-                          <option className={styles.option} value={nums.value}>{nums.label}</option>
-                        ))}
-                      </select>
-                    </div></>))}
+              <div className="col col-md-8">
+                <label className={styles.text}>All Cards: </label>
+                <br />
+                <Select
+                  className={styles.option}
+                  multi={true}
+                  options={this.state.allCards}
+                  onChange={(values) => this.setValuesLie(values)} />
+                {/*<p>Los valores seleccionados son: {JSON.stringify(this.state.selectValuesLie, false, 2)}</p>*/}
+              </div>
             </div>
             <br />
             <div class="modal-footer">
-              {this.state.doneLie && <button type="button" onClick={() => { saveChanges('hols') }}>Save changes</button>}
+              {this.state.selectValues.length === this.state.selectValuesLie.length ?
+                <button type="button" onClick={() => { this.sendMove(socket, roomname) }}>End Turn</button>
+                :
+                `Debes seleccionar unicamente ${this.state.selectValues.length} cartas`
+              }
               <button type="button" onClick={() => { closeModal() }}>Close</button>
             </div>
           </div>}
@@ -254,39 +169,28 @@ class Modal extends Component {
         {this.state.onPlay === true &&
           <div className={styles.modal}>
             Select your cards for move
-            <button type="button" onClick={() => {
-              this.addDiscardCard()
-            }}> + </button>
             <hr></hr>
             <div className='row'>
-              <div className="col col-md-6">
-                <label className={styles.text}>Palo </label>
+              <div className="col col-md-8">
+                <label className={styles.text}>Your Deck</label>
                 <br />
-                {this.state.discardCard.map((disCard, idxCard) => (
-                  <>
-                    <select className={styles.option} onChange={(e) => {
-                      this.removeCard(e.target.value, this.state.newDeck, idxCard)
-                      //console.log(e.target.value)
-                    }}>
-                      <option default hidden>--</option>
-                      {this.state.newDeck.map((palo, idx) => (
-                        <option className={styles.option} value={idx} hidden={palo.enabled}>{palo.desc} </option>
-                      ))}
-                    </select>
-                    <div className={styles.spacio}></div>
-                  </>
-                ))}
+                <Select className={styles.option}
+                  multi={true}
+                  options={this.state.newDeck}
+                  onChange={(values) => this.setValues(values)} />
+                {/*<p>Los valores seleccionados son: {JSON.stringify(this.state.selectValues, false, 2)}</p>*/}
+
               </div>
             </div>
             <br />
             <div class="modal-footer">
-              <button type="button" className="primary" onClick={() => {
+              <button type="button" class="btn btn-primary" onClick={() => {
                 this.setState({
                   onPlay: false,
                   onLie: true
                 })
               }}>Save changes</button>
-              <button type="button" onClick={() => { closeModal() }}>Close</button>
+              <button type="button" class="btn btn-light" onClick={() => { closeModal() }}>Close</button>
             </div>
 
           </div>}

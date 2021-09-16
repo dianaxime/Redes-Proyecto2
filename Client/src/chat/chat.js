@@ -96,6 +96,8 @@ function Chat({ username, roomname, socket }) {
             username={player.username}
             on_turn={player.turn}
             deck={player.deck}
+            socket={socket}
+            roomname={roomname}
           /> :
           <><button onClick={startGame}>
             Iniciar partida</button>
