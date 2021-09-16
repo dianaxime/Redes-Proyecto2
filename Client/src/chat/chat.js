@@ -37,7 +37,20 @@ function Chat({ username, roomname, socket }) {
       console.log(data)
       let ans = to_Decrypt(JSON.stringify(data));
       ans = JSON.parse(ans);
-      console.log('player', ans);
+      setPlayer({
+        userId: ans.userId,
+        username: ans.username,
+        turn: ans.turn,
+        deck: ans.deck
+      });
+    });
+
+    socket.on("change_turn", (data) => {
+      //decypt
+      console.log(data)
+      let ans = to_Decrypt(JSON.stringify(data));
+      ans = JSON.parse(ans);
+      console.log('change_turn', ans);
       setPlayer({
         userId: ans.userId,
         username: ans.username,

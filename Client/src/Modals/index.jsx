@@ -91,11 +91,9 @@ class Modal extends Component {
       r_cards: r_cards,
       lie: lie
     }
-    console.log('movimiento completo',move)
     //encrypt here
     const ans = to_Encrypt(JSON.stringify(move));
     socket.emit("move", ans);
-
   };
 
   componentDidMount = () => {
