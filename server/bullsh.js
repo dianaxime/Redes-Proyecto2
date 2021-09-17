@@ -201,8 +201,13 @@ function process_Choice(room, choice, userId) {
   let players = [];
   
   // Obtiene el id del jugador del turno anterior
-  let b_userId = c_rooms[room]['users'][((c_rooms[room]['turn'] - 1) % c_rooms[room]['c_players'])];
-  
+  let b_id = ((c_rooms[room]['turn'] - 1) % c_rooms[room]['c_players']);
+
+  if (b_id < 0) {
+    b_id = c_rooms[room]['c_players'] + b_id;
+  }
+
+  let b_userId = c_rooms[room]['users'][b_id];
   /* 
     Si adivina que el jugador miente el jugador previo 
     se lleva todas las cartas
