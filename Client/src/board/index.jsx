@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { Component } from 'react';
 import Deck from '../Deck';
 import style from './board.module.css';
-import  Modal  from '../Modals';
+import Modal from '../Modals';
 
 class Board extends Component {
   constructor() {
     super()
     this.state = {
       lieModal: false,
-      playModal: false,
+      guessModal: false,
       //lenghtD: [1, 2]
       //guess: undefined
     }
@@ -19,14 +19,12 @@ class Board extends Component {
     this.setState({
       lieModal: !this.state.lieModal
     });
-    console.log(this.state.lieModal)
   }
 
-  formPlay = () => {
+  formGuess = () => {
     this.setState({
-      playModal: !this.state.playModal
+      guessModal: !this.state.guessModal
     });
-    console.log(this.state.playModal)
   }
 
   sendLie = (lie) => {
@@ -69,42 +67,38 @@ class Board extends Component {
                   </span> :
                   ''}
               </>}
-            {on_turn &&
-              <>
-                {on_turn === 'liar' ?
-                  <span>
-                    <button
-                      onClick={() => { this.formPlay() }}
-                    >select cads</button>
-                  </span> :
-                  ''}
-              </>}
             {on_turn && <>{on_turn === 'guesser' ?
-              <span><button>Decidir</button></span> : ''}</>}
+              <span>
+                <button
+                  onClick={() => { this.formGuess() }}
+                > Decide
+                </button>
+              </span> :
+              ''}
+            </>}
           </div>
           <br />
           <div className="col col-md-12">
-            
-            {/* aqui llamamos a los forms de */}
-            
+
+            {/* aqui llamamos a los forms de movimiento y mentira o verdad */}
+
             {this.state.lieModal === true &&
               <Modal
                 type={'lie'}
                 closeModal={this.formLie}
-                saveChanges={this.sendLie}
-                deck={deck}
-                lenghtD={[1,2]}
                 socket={socket}
                 roomname={roomname}
+                deck={deck}
               />
             }
-            {/*this.state.playModal === true &&
+            {this.state.guessModal === true &&
               <Modal
-                type={'play'}
-                closeModal={this.formPlay}
-                saveChanges={'hola'}
+                type={'guesser'}
+                closeModal={this.formGuess}
                 deck={deck}
-            />*/}
+                socket={socket}
+                roomname={roomname}
+            />}
           </div>
           {/* cartas del player*/}
           <div className={style.gameboard}>

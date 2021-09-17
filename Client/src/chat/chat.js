@@ -144,7 +144,7 @@ function Chat({ username, roomname, socket }) {
                 else {
                   return (
                     /*este es el brodcast hay que cambiarle color*/
-                    <div key={i.text} className="message mess-right">
+                    <div key={i.text} className="message mess-brodcast">
                       <p>{i.text} </p>
                       <span>{i.username}</span>
                     </div>
