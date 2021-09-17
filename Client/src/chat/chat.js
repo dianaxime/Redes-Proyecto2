@@ -8,7 +8,7 @@ function Chat({ username, roomname, socket }) {
   const [text, setText] = useState("");
   const [messages, setMessages] = useState([]);
   const [player, setPlayer] = useState([]);
-  //const [player, setPlayer] = useState({});
+  const [winner, setWinner] = useState([]);
 
 
   const dispatch = useDispatch();
@@ -32,6 +32,7 @@ function Chat({ username, roomname, socket }) {
       setMessages([...temp]);
     });
 
+    /*Funciones que escuchan*/
     socket.on("player", (data) => {
       //decypt
       console.log(data)
@@ -73,6 +74,19 @@ function Chat({ username, roomname, socket }) {
       });
     });
 
+    socket.on("winner", (data) => {
+      //decypt
+      console.log(data)
+      let ans = to_Decrypt(JSON.stringify(data));
+      ans = JSON.parse(ans);
+      console.log('turn_winner', ans);
+      setWinner({
+        text: ans.text
+      });
+    });
+
+    /*Manejo de errores */
+
     socket.on("full_room", (data) => {
       //decypt
       console.log('full_room', data);
@@ -89,6 +103,7 @@ function Chat({ username, roomname, socket }) {
 
   }, [socket]);
 
+  /*enviar informacion*/
   const sendData = () => {
     if (text !== "") {
       //encrypt here
@@ -117,6 +132,9 @@ function Chat({ username, roomname, socket }) {
 
   return (
     <div className="row">
+      {/*winner.text &&
+        
+      */}
       <div className="col col-lg-8">
         {player.deck ?
           <Board
@@ -141,12 +159,12 @@ function Chat({ username, roomname, socket }) {
             {messages.map((i) => {
               if (i.username === username) {
                 if (i.flag === 'message') {
-                return (
-                  <div key={i.text} className="message">
-                    <span>{i.username}</span>
-                    <p>{i.text}</p>
-                  </div>
-                );
+                  return (
+                    <div key={i.text} className="message">
+                      <span>{i.username}</span>
+                      <p>{i.text}</p>
+                    </div>
+                  );
                 } else {
                   return (
                     /*este es el brodcast hay que cambiarle color*/
