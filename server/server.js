@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
       socket.emit("full_room", to_Encrypt(JSON.stringify({
         userId: socket.id,
         username: username,
-        text: `Lo sentimos la partida ya ha iniciado`,
+        text: `Sorry, the game has already started.`,
       })));
     } else {
       // Verificar si ya existe el room y si no lo crea
@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
       socket.emit("message", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
-        text: `Bienvenid@ ${p_user.username}`,
+        text: `Welcome ${p_user.username}`,
         flag: `message`,
       })));
   
@@ -74,7 +74,7 @@ io.on("connection", (socket) => {
       socket.broadcast.to(p_user.room).emit("message", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
-        text: `${p_user.username} se ha unido al juego`,
+        text: `${p_user.username} has joined the game!`,
         flag: `message`,
       })));
     }
@@ -165,13 +165,13 @@ io.on("connection", (socket) => {
     const {room, choice } = data;
 
     const p_user = get_Current_User(socket.id);
-
+    
     const { game_over, p_winner, players } = process_Choice(room, choice, p_user.id);
 
     // Si ya hay un ganador envia la informacion y termina el juego
     if (game_over) {
       socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
-        text: `El ganador es ${p_winner.username}`,
+        text: `The winner is ${p_winner.username}`,
       })));
     } else {
       /*
@@ -211,11 +211,11 @@ io.on("connection", (socket) => {
     */
     if (q_w > 1) {
       socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
-        text: `Hubo un empate entre ${n_winners}`,
+        text: `There was a tie between ${n_winners}`,
       })));
     } else {
       socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
-        text: `El ganador es ${n_winners}`,
+        text: `The winner is ${n_winners}`,
       })));
     }
   });
@@ -228,7 +228,7 @@ io.on("connection", (socket) => {
       io.to(p_user.room).emit("message", to_Encrypt(JSON.stringify({
         userId: p_user.id,
         username: p_user.username,
-        text: `${p_user.username} ha dejado el chat`,
+        text: `${p_user.username} has left the chat.`,
       })));
     }
   });
