@@ -93,6 +93,28 @@
         padding-right: 0.5rem;
       }
     }
+
+    .mess-brodcast {
+      margin-left: auto;
+      margin-right: 0px;
+      display: flex;
+      flex-direction: column;
+      max-width: 220px;
+      padding-right: 0.5rem;
+      p {
+        text-align: end;
+        border-radius: 10px 0px 10px 10px;
+        background-color: #0d8f8d;
+        color: white;
+      }
+      span {
+        width: 100%;
+        text-align: end;
+        padding-left: 0rem;
+        padding-right: 0.5rem;
+      }
+    }
+
   }
 
   .send {

@@ -126,12 +126,22 @@ function Chat({ username, roomname, socket }) {
           <div className="chat-message">
             {messages.map((i) => {
               if (i.username === username) {
+                if (i.flag === 'message') {
                 return (
                   <div key={i.text} className="message">
                     <p>{i.text}</p>
                     <span>{i.username}</span>
                   </div>
                 );
+                } else {
+                  return (
+                    /*este es el brodcast hay que cambiarle color*/
+                    <div key={i.text} className="message mess-brodcast">
+                      <p>{i.text} </p>
+                      <span>{i.username}</span>
+                    </div>
+                  )
+                }
               } else {
                 if (i.flag === 'message') {
                   return (
@@ -144,7 +154,7 @@ function Chat({ username, roomname, socket }) {
                 else {
                   return (
                     /*este es el brodcast hay que cambiarle color*/
-                    <div key={i.text} className="message mess-right">
+                    <div key={i.text} className="message mess-brodcast">
                       <p>{i.text} </p>
                       <span>{i.username}</span>
                     </div>
