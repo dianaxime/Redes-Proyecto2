@@ -164,10 +164,8 @@ io.on("connection", (socket) => {
     data = JSON.parse(data);
     const {room, choice } = data;
 
-    
     const p_user = get_Current_User(socket.id);
     
-    console.log("holaaa si llego aca", data, p_user.id)
     const { game_over, p_winner, players } = process_Choice(room, choice, p_user.id);
 
     // Si ya hay un ganador envia la informacion y termina el juego
