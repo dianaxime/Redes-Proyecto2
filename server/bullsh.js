@@ -167,7 +167,7 @@ function process_Move(room, userId, r_cards, lie) {
   let players = [];
   
   // verifica si la jugada es igual a la mentira
-  if (isEqualWith(r_cards, lie, customizer)) {
+  if (!isEqualWith(r_cards, lie, customizer)) {
     c_rooms[room]['liar'] = true;
   }
 
@@ -196,22 +196,27 @@ function process_Move(room, userId, r_cards, lie) {
 }
 
 function process_Choice(room, choice, userId) {
+  console.log("entro aca")
   let p_winner = {};
   let game_over = false;
   let players = [];
   // Obtiene el id del jugador del turno anterior
   let b_userId = c_rooms[room]['users'][((c_rooms[room]['turn'] - 1) % c_rooms[room]['c_players'])];
+  console.log(userId, b_userId)
   /* 
     Si adivina que el jugador miente el jugador previo 
     se lleva todas las cartas
   */
+  console.log(c_rooms[room]['liar'], choice)
   if (c_rooms[room]['liar'] == choice && choice == true) {
+    console.log("es mentira")
     c_users[b_userId]['deck'] = [...c_users[b_userId]['deck'], ...c_rooms[room]['c_table']];
     c_rooms[room]['c_table'] = [];
   }
   
   // Si no adivina el se lleva las cartas
   if (c_rooms[room]['liar'] != choice) {
+    console.log("es verdad")
     c_users[userId]['deck'] = [...c_users[userId]['deck'], ...c_rooms[room]['c_table']];
     c_rooms[room]['c_table'] = [];
   }
@@ -229,6 +234,8 @@ function process_Choice(room, choice, userId) {
     players.push(c_users[userId]);
     players.push(c_users[b_userId]);
   }
+
+  console.log(players)
   
   let result = {p_winner: p_winner, game_over: game_over, players: players};
 
