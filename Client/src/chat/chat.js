@@ -59,6 +59,20 @@ function Chat({ username, roomname, socket }) {
       });
     });
 
+    socket.on("turn_winner", (data) => {
+      //decypt
+      console.log(data)
+      let ans = to_Decrypt(JSON.stringify(data));
+      ans = JSON.parse(ans);
+      console.log('turn_winner', ans);
+      setPlayer({
+        userId: ans.userId,
+        username: ans.username,
+        turn: ans.turn,
+        deck: ans.deck
+      });
+    });
+
     socket.on("full_room", (data) => {
       //decypt
       console.log('full_room', data);
@@ -129,16 +143,16 @@ function Chat({ username, roomname, socket }) {
                 if (i.flag === 'message') {
                 return (
                   <div key={i.text} className="message">
-                    <p>{i.text}</p>
                     <span>{i.username}</span>
+                    <p>{i.text}</p>
                   </div>
                 );
                 } else {
                   return (
                     /*este es el brodcast hay que cambiarle color*/
                     <div key={i.text} className="message mess-brodcast">
+                      <span>Brodcast</span>
                       <p>{i.text} </p>
-                      <span>{i.username}</span>
                     </div>
                   )
                 }
@@ -146,8 +160,8 @@ function Chat({ username, roomname, socket }) {
                 if (i.flag === 'message') {
                   return (
                     <div key={i.text} className="message mess-right">
-                      <p>{i.text} </p>
                       <span>{i.username}</span>
+                      <p>{i.text} </p>
                     </div>
                   );
                 }
@@ -155,8 +169,8 @@ function Chat({ username, roomname, socket }) {
                   return (
                     /*este es el brodcast hay que cambiarle color*/
                     <div key={i.text} className="message mess-brodcast">
+                      <span>Brodcast</span>
                       <p>{i.text} </p>
-                      <span>{i.username}</span>
                     </div>
                   )
                 }

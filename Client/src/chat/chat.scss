@@ -53,6 +53,7 @@
     align-content: flex-start;
 
     .message {
+      margin-bottom: 10px;
       margin-left: 0px;
       max-width: 220px;
       padding-left: 0.5rem;
@@ -74,6 +75,7 @@
       }
     }
     .mess-right {
+      margin-bottom: 10px;
       margin-left: auto;
       margin-right: 0px;
       display: flex;
@@ -106,6 +108,7 @@
         border-radius: 10px 0px 10px 10px;
         background-color: #0d8f8d;
         color: white;
+        font-weight: 600;
       }
       span {
         width: 100%;
