@@ -1,0 +1,32 @@
+.text {
+  color: black !important;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 10px;
+  width: 80%;
+  color: black !important;
+  padding: 15px;
+  margin-top:  10px;
+  margin-bottom:  10px;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 10px;
+  width: 80%;
+  color: black !important;
+  padding: 15px;
+  margin-top:  10px;
+  margin-bottom:  10px;
+}
+
+.option {
+  color: black;
+  width: 100%;
+}
+
+.spacio {
+  height: 5px;
+}
