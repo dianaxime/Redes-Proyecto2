@@ -151,7 +151,11 @@ function process_Move(room, userId, r_cards, lie) {
     para los otros jugadores
   */
   for (var i of lie) {
-    falsehood = falsehood + " , " + i['desc'];
+    if (falsehood === ''){
+      falsehood = falsehood + "" + i['desc'];
+    } else {
+      falsehood = falsehood + "," + i['desc'];
+    }
   }
 
   // funcion de comparacion
@@ -180,7 +184,7 @@ function process_Move(room, userId, r_cards, lie) {
   c_rooms[room]['turn'] = (c_rooms[room]['turn'] + 1) % c_rooms[room]['c_players'];
 
   let a_userId;
-  a_userId = c_rooms[room]['users'][c_rooms[room]['turn']]['userId'];
+  a_userId = c_rooms[room]['users'][c_rooms[room]['turn']];
 
   // Cambia el status del sig jugador
   c_users[a_userId]['turn'] = 'guesser';
@@ -197,7 +201,7 @@ function process_Choice(room, choice, userId) {
   let game_over = false;
   let players = [];
   // Obtiene el id del jugador del turno anterior
-  let b_userId = c_users[c_rooms[room]['users'][((c_rooms[room]['turn'] - 1) % c_rooms[room]['c_players'])]]['userId'];
+  let b_userId = c_users[c_rooms[room]['users'][((c_rooms[room]['turn'] - 1) % c_rooms[room]['c_players'])]];
   
   /* 
     Si adivina que el jugador miente el jugador previo 
