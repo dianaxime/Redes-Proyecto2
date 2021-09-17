@@ -211,21 +211,15 @@ class Modal extends Component {
             You think this was a lie?
             <hr></hr>
             <div className='row'>
-              <div className="col col-md-6">
+              <div className="col col-md-3">
               <button type="button" class="btn btn-danger" onClick={() => {this.sendChoice(true, socket, roomname); closeModal(); }}>It`s Lie!</button>
               </div>
-              <div className="col col-md-6">
+              <div className="col col-md-3">
                 <button type="button" class="btn btn-success" onClick={() => {this.sendChoice(false, socket, roomname); closeModal(); }}>It`s True!</button>
               </div>
             </div>
-
+          <br />
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" onClick={() => {
-                this.setState({
-                  onPlay: false,
-                  onLie: true
-                })
-              }}>Save changes</button>
               <button type="button" class="btn btn-light" onClick={() => { closeModal() }}>Close</button>
             </div>
           </div>
