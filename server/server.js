@@ -106,6 +106,16 @@ io.on("connection", (socket) => {
         turn: user.turn,
         deck: user.deck,
       })));
+
+      if (user.turn === 'liar') {
+        // Envia a los jugadores del room el cambio de turno
+        io.to(room).emit("message", to_Encrypt(JSON.stringify({
+          userId: user.id,
+          username: user.username,
+          text: `The game has started. The player on turn is ${user.username}. Good luck!`,
+          flag: `broadcast`,
+        })));
+      }
     }
   });
 
@@ -127,6 +137,16 @@ io.on("connection", (socket) => {
         turn: user.turn,
         deck: user.deck,
       })));
+
+      if (user.turn === 'guesser') {
+        // Envia a los jugadores del room el cambio de turno
+        io.to(room).emit("message", to_Encrypt(JSON.stringify({
+          userId: user.id,
+          username: user.username,
+          text: `${user.username} change to ${user.turn}.`,
+          flag: `broadcast`,
+        })));
+      }
     }
 
     // Envia a los jugadores del room cual fue la mentira
@@ -165,6 +185,16 @@ io.on("connection", (socket) => {
           turn: user.turn,
           deck: user.deck
         })));
+
+        if (user.turn === 'liar') {
+          // Envia a los jugadores del room el cambio de turno
+          io.to(room).emit("message", to_Encrypt(JSON.stringify({
+            userId: user.id,
+            username: user.username,
+            text: `${user.username} change to ${user.turn}.`,
+            flag: `broadcast`,
+          })));
+        }
       }
     }
     

@@ -36,24 +36,23 @@ Una mesa/room se veria algo asi
 
 */
 
-let pool_cards = [
-  { palo: 'oro', valor: 1, desc: 'Uno de Oro'}, { palo: 'oro', valor: 2, desc: 'Dos de Oro'}, { palo: 'oro', valor: 3, desc: 'Tres de Oro'}, { palo: 'oro', valor: 4, desc: 'Cuatro de Oro'},
-  { palo: 'oro', valor: 5, desc: 'Cinco de Oro'}, { palo: 'oro', valor: 6, desc: 'Seis de Oro'}, { palo: 'oro', valor: 7, desc: 'Siete de Oro'}, { palo: 'oro', valor: 8, desc: 'Ocho de Oro'},
-  { palo: 'oro', valor: 9, desc: 'Nueve de Oro'}, { palo: 'oro', valor: 10, desc: 'Diez de Oro'}, { palo: 'oro', valor: 11, desc: 'Once de Oro'}, { palo: 'oro', valor: 12, desc: 'Doce de Oro'},
+const pool_cards = [
+  { palo: 'oro', valor: 1, desc: 'One of Coins' }, { palo: 'oro', valor: 2, desc: 'Two of Coins' }, { palo: 'oro', valor: 3, desc: 'Three of Coins' }, { palo: 'oro', valor: 4, desc: 'Four of Coins' },
+  { palo: 'oro', valor: 5, desc: 'Five of Coins' }, { palo: 'oro', valor: 6, desc: 'Six of Coins' }, { palo: 'oro', valor: 7, desc: 'Seven of Coins' }, { palo: 'oro', valor: 8, desc: 'Eight of Coins' },
+  { palo: 'oro', valor: 9, desc: 'Nine of Coins' }, { palo: 'oro', valor: 10, desc: 'Ten of Coins' }, { palo: 'oro', valor: 11, desc: 'Eleven of Coins' }, { palo: 'oro', valor: 12, desc: 'Twelve of Coins' },
 
-  { palo: 'copas', valor: 1, desc: 'Uno de Copas'}, { palo: 'copas', valor: 2, desc: 'Dos de Copas'}, { palo: 'copas', valor: 3, desc: 'Tres de Copas'}, { palo: 'copas', valor: 4, desc: 'Cuatro de Copas'},
-  { palo: 'copas', valor: 5, desc: 'Cinco de Copas'}, { palo: 'copas', valor: 6, desc: 'Seis de Copas'}, { palo: 'copas', valor: 7, desc: 'Siete de Copas'}, { palo: 'copas', valor: 8, desc: 'Ocho de Copas'},
-  { palo: 'copas', valor: 9, desc: 'Nueve de Copas'}, { palo: 'copas', valor: 10, desc: 'Diez de Copas'}, { palo: 'copas', valor: 11, desc: 'Once de Copas'}, { palo: 'copas', valor: 12, desc: 'Doce de Copas'},
+  { palo: 'copas', valor: 1, desc: 'One of Cups' }, { palo: 'copas', valor: 2, desc: 'Two of Cups' }, { palo: 'copas', valor: 3, desc: 'Three of Cups' }, { palo: 'copas', valor: 4, desc: 'Four of Cups' },
+  { palo: 'copas', valor: 5, desc: 'Five of Cups' }, { palo: 'copas', valor: 6, desc: 'Six of Cups' }, { palo: 'copas', valor: 7, desc: 'Seven of Cups' }, { palo: 'copas', valor: 8, desc: 'Eight of Cups' },
+  { palo: 'copas', valor: 9, desc: 'Nine of Cups' }, { palo: 'copas', valor: 10, desc: 'Ten of Cups' }, { palo: 'copas', valor: 11, desc: 'Eleven of Cups' }, { palo: 'copas', valor: 12, desc: 'Twelve of Cups' },
 
-  { palo: 'espadas', valor: 1, desc: 'Uno de Oro'}, { palo: 'espadas', valor: 2, desc: 'Dos de Espadas'}, { palo: 'espadas', valor: 3, desc: 'Tres de Espadas'}, { palo: 'espadas', valor: 4, desc: 'Cuatro de Espadas'},
-  { palo: 'espadas', valor: 5, desc: 'Cinco de Oro'}, { palo: 'espadas', valor: 6, desc: 'Seis de Espadas'}, { palo: 'espadas', valor: 7, desc: 'Siete de Espadas'}, { palo: 'espadas', valor: 8, desc: 'Ocho de Espadas'},
-  { palo: 'espadas', valor: 9, desc: 'Nueve de Oro'}, { palo: 'espadas', valor: 10, desc: 'Diez de Espadas'}, { palo: 'espadas', valor: 11, desc: 'Once de Espadas'}, { palo: 'espadas', valor: 12, desc: 'Doce de Espadas'},
+  { palo: 'espadas', valor: 1, desc: 'One of Swords' }, { palo: 'espadas', valor: 2, desc: 'Two of Swords' }, { palo: 'espadas', valor: 3, desc: 'Three of Swords' }, { palo: 'espadas', valor: 4, desc: 'Four of Swords' },
+  { palo: 'espadas', valor: 5, desc: 'Five of Swords' }, { palo: 'espadas', valor: 6, desc: 'Six of Swords' }, { palo: 'espadas', valor: 7, desc: 'Seven of Swords' }, { palo: 'espadas', valor: 8, desc: 'Eight of Swords' },
+  { palo: 'espadas', valor: 9, desc: 'Nine of Swords' }, { palo: 'espadas', valor: 10, desc: 'Ten of Swords' }, { palo: 'espadas', valor: 11, desc: 'Eleven of Swords' }, { palo: 'espadas', valor: 12, desc: 'Twelve of Swords' },
 
-  { palo: 'bastos', valor: 1, desc: 'Uno de Bastos'}, { palo: 'bastos', valor: 2, desc: 'Dos de Bastos'}, { palo: 'bastos', valor: 3, desc: 'Tres de Bastos'}, { palo: 'bastos', valor: 4, desc: 'Cuatro de Bastos'},
-  { palo: 'bastos', valor: 5, desc: 'Cinco de Bastos'}, { palo: 'bastos', valor: 6, desc: 'Seis de Bastos'}, { palo: 'bastos', valor: 7, desc: 'Siete de Bastos'}, { palo: 'bastos', valor: 8, desc: 'Ocho de Bastos'},
-  { palo: 'bastos', valor: 9, desc: 'Nueve de Bastos'}, { palo: 'bastos', valor: 10, desc: 'Diez de Bastos'}, { palo: 'bastos', valor: 11, desc: 'Once de Bastos'}, { palo: 'bastos', valor: 12, desc: 'Doce de Bastos'},
+  { palo: 'bastos', valor: 1, desc: 'One of Clubs' }, { palo: 'bastos', valor: 2, desc: 'Two of Clubs' }, { palo: 'bastos', valor: 3, desc: 'Three of Clubs' }, { palo: 'bastos', valor: 4, desc: 'Four of Clubs' },
+  { palo: 'bastos', valor: 5, desc: 'Five of Clubs' }, { palo: 'bastos', valor: 6, desc: 'Six of Clubs' }, { palo: 'bastos', valor: 7, desc: 'Seven of Clubs' }, { palo: 'bastos', valor: 8, desc: 'Eight of Clubs' },
+  { palo: 'bastos', valor: 9, desc: 'Nine of Clubs' }, { palo: 'bastos', valor: 10, desc: 'Ten of Clubs' }, { palo: 'bastos', valor: 11, desc: 'Eleven of Clubs' }, { palo: 'bastos', valor: 12, desc: 'Twelve of Clubs' },
 ]
-
 // Inicializar a un jugador en un room especifico
 function join_User(id, username, room) {
   const p_user = { id, username, room, turn: 'inactive', deck: []};
@@ -151,7 +150,11 @@ function process_Move(room, userId, r_cards, lie) {
     para los otros jugadores
   */
   for (var i of lie) {
-    falsehood = falsehood + " , " + i['desc'];
+    if (falsehood === ''){
+      falsehood = falsehood + "" + i['desc'];
+    } else {
+      falsehood = falsehood + ", " + i['desc'];
+    }
   }
 
   // funcion de comparacion
@@ -180,7 +183,7 @@ function process_Move(room, userId, r_cards, lie) {
   c_rooms[room]['turn'] = (c_rooms[room]['turn'] + 1) % c_rooms[room]['c_players'];
 
   let a_userId;
-  a_userId = c_rooms[room]['users'][c_rooms[room]['turn']]['userId'];
+  a_userId = c_rooms[room]['users'][c_rooms[room]['turn']];
 
   // Cambia el status del sig jugador
   c_users[a_userId]['turn'] = 'guesser';
@@ -197,7 +200,7 @@ function process_Choice(room, choice, userId) {
   let game_over = false;
   let players = [];
   // Obtiene el id del jugador del turno anterior
-  let b_userId = c_users[c_rooms[room]['users'][((c_rooms[room]['turn'] - 1) % c_rooms[room]['c_players'])]]['userId'];
+  let b_userId = c_users[c_rooms[room]['users'][((c_rooms[room]['turn'] - 1) % c_rooms[room]['c_players'])]];
   
   /* 
     Si adivina que el jugador miente el jugador previo 
