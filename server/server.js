@@ -172,7 +172,15 @@ io.on("connection", (socket) => {
 
     const p_user = get_Current_User(socket.id);
     
-    const { game_over, p_winner, players } = process_Choice(room, choice, p_user.id);
+    const { game_over, p_winner, players, d_winner } = process_Choice(room, choice, p_user.id);
+
+    // Envia a los jugadores del room quien gano la decision
+    io.to(room).emit("message", to_Encrypt(JSON.stringify({
+      userId: p_user.id,
+      username: p_user.username,
+      text: `${d_winner} won the decision.`,
+      flag: `broadcast`,
+    })));
 
     // Si ya hay un ganador envia la informacion y termina el juego
     if (game_over) {
