@@ -79,7 +79,7 @@ function Chat({ username, roomname, socket }) {
       console.log(data)
       let ans = to_Decrypt(JSON.stringify(data));
       ans = JSON.parse(ans);
-      console.log('turn_winner', ans);
+      console.log('winner', ans);
       setWinner({
         text: ans.text
       });
@@ -132,9 +132,22 @@ function Chat({ username, roomname, socket }) {
 
   return (
     <div className="row">
-      {/*winner.text &&
-        
-      */}
+      {winner.text &&
+        <div
+        className={`modal fade show`} style={{ display: "block", backgroundColor: '#000000BF', transition: "all 0.5s ease-in" }}>
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content">
+          
+            <h3 //className={styles.bodyFont}
+            >{winner.text} </h3>
+            <button //className={styles.redbtn} onClick={() => hideModal()}
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+      }
       <div className="col col-lg-8">
         {player.deck ?
           <Board
