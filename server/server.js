@@ -61,6 +61,12 @@ io.on("connection", (socket) => {
       // Crea un usuario
       const p_user = join_User(socket.id, username, roomname);
       socket.join(p_user.room);
+
+      socket.emit("allowed_room", to_Encrypt(JSON.stringify({
+        userId: socket.id,
+        username: username,
+        text: `Allowed.`,
+      })));
   
       // Muestra un mensaje de bienvenida
       socket.emit("message", to_Encrypt(JSON.stringify({
