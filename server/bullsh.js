@@ -107,6 +107,11 @@ function copy_Deck(array) {
   return n_array;
 }
 
+// verifica si hay tres o mas integrantes en el room
+function can_Start(room) {
+  return c_rooms[room]['c_players'] >= 3;
+}
+
 // Reparte las cartas entre los jugadores de ese room
 function shuffle_Cards(room) {
   let players = [];
@@ -293,5 +298,6 @@ module.exports = {
   check_Started,
   process_Move,
   process_Choice,
-  define_Winner
+  define_Winner,
+  can_Start
 };
