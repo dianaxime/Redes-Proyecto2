@@ -13,7 +13,8 @@ const {
   check_Started,
   process_Move,
   process_Choice,
-  define_Winner 
+  define_Winner,
+  can_Start 
 } = require("./bullsh");
 
 const {
@@ -102,27 +103,39 @@ io.on("connection", (socket) => {
   // Inicio de partida y repartir cartas a los jugadores
   socket.on("play", (room) => {
     room = to_Decrypt(room);
-    players = shuffle_Cards(room);
-    
-    // Envia la informacion de su turno y sus cartas a los jugadores de un room
-    for (var user of players){
-      io.to(user.id).emit("player", to_Encrypt(JSON.stringify({
-        userId: user.id,
-        username: user.username,
-        turn: user.turn,
-        deck: user.deck,
-      })));
+    const p_user = get_Current_User(socket.id);
 
-      if (user.turn === 'liar') {
-        // Envia a los jugadores del room el cambio de turno
-        io.to(room).emit("message", to_Encrypt(JSON.stringify({
+    // Primero verificamos que existan tres participantes o mas en el room
+    if (can_Start(room)) {
+      players = shuffle_Cards(room);
+      
+      // Envia la informacion de su turno y sus cartas a los jugadores de un room
+      for (var user of players){
+        io.to(user.id).emit("player", to_Encrypt(JSON.stringify({
           userId: user.id,
           username: user.username,
-          text: `The game has started. The player on turn is ${user.username}. Good luck!`,
-          flag: `broadcast`,
+          turn: user.turn,
+          deck: user.deck,
         })));
+  
+        if (user.turn === 'liar') {
+          // Envia a los jugadores del room el cambio de turno
+          io.to(room).emit("message", to_Encrypt(JSON.stringify({
+            userId: user.id,
+            username: user.username,
+            text: `The game has started. The player on turn is ${user.username}. Good luck!`,
+            flag: `broadcast`,
+          })));
+        }
       }
+    } else {
+      socket.emit("cant_start", to_Encrypt(JSON.stringify({
+        userId: p_user.id,
+        username: p_user.username,
+        text: `You need three or more players.`,
+      })));
     }
+
   });
 
   // Recibar la movida del jugador y actualizar
@@ -172,7 +185,15 @@ io.on("connection", (socket) => {
 
     const p_user = get_Current_User(socket.id);
     
-    const { game_over, p_winner, players } = process_Choice(room, choice, p_user.id);
+    const { game_over, p_winner, players, d_winner } = process_Choice(room, choice, p_user.id);
+
+    // Envia a los jugadores del room quien gano la decision
+    io.to(room).emit("message", to_Encrypt(JSON.stringify({
+      userId: p_user.id,
+      username: p_user.username,
+      text: `${d_winner} won the decision.`,
+      flag: `broadcast`,
+    })));
 
     // Si ya hay un ganador envia la informacion y termina el juego
     if (game_over) {

@@ -107,6 +107,11 @@ function copy_Deck(array) {
   return n_array;
 }
 
+// verifica si hay tres o mas integrantes en el room
+function can_Start(room) {
+  return c_rooms[room]['c_players'] >= 3;
+}
+
 // Reparte las cartas entre los jugadores de ese room
 function shuffle_Cards(room) {
   let players = [];
@@ -199,6 +204,7 @@ function process_Choice(room, choice, userId) {
   let p_winner = {};
   let game_over = false;
   let players = [];
+  let d_winner = '';
   
   // Obtiene el id del jugador del turno anterior
   let b_id = ((c_rooms[room]['turn'] - 1) % c_rooms[room]['c_players']);
@@ -215,12 +221,18 @@ function process_Choice(room, choice, userId) {
   if (c_rooms[room]['liar'] == choice && choice == true) {
     c_users[b_userId]['deck'] = [...c_users[b_userId]['deck'], ...c_rooms[room]['c_table']];
     c_rooms[room]['c_table'] = [];
+    d_winner = c_users[b_userId]['username'];
   }
   
   // Si no adivina el se lleva las cartas
   if (c_rooms[room]['liar'] != choice) {
     c_users[userId]['deck'] = [...c_users[userId]['deck'], ...c_rooms[room]['c_table']];
     c_rooms[room]['c_table'] = [];
+    d_winner = c_users[userId]['username'];
+  }
+
+  if (c_rooms[room]['liar'] == choice && choice == false) {
+    d_winner = 'No one'
   }
   
   /*
@@ -237,7 +249,7 @@ function process_Choice(room, choice, userId) {
     players.push(c_users[b_userId]);
   }
 
-  let result = {p_winner: p_winner, game_over: game_over, players: players};
+  let result = {p_winner: p_winner, game_over: game_over, players: players, d_winner: d_winner};
 
   return result;
 }
@@ -286,5 +298,6 @@ module.exports = {
   check_Started,
   process_Move,
   process_Choice,
-  define_Winner
+  define_Winner,
+  can_Start
 };
