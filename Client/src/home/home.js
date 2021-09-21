@@ -8,13 +8,15 @@ function Homepage({ socket }) {
   const [roomname, setroomname] = useState("");
   const [full_room, setFullRoom] = useState([]);
   const [allowed_room, setAllowRoom] = useState([]);
+  let co
 
 
   useEffect(() => {
     socket.on("full_room", (data) => {
       //decypt
       console.log('full_room', data);
-      const ans = to_Decrypt(JSON.stringify(data));
+      let ans = to_Decrypt(JSON.stringify(data));
+      ans = JSON.parse(ans);
       console.log('full_room', ans);
       setFullRoom({
         text: ans.text
@@ -24,11 +26,13 @@ function Homepage({ socket }) {
     socket.on("allowed_room", (data) => {
       //decypt
       console.log('allowed_room', data);
-      const ans = to_Decrypt(JSON.stringify(data));
+      let ans = to_Decrypt(JSON.stringify(data));
+      ans = JSON.parse(ans);
       console.log('allowed_room', ans);
       setAllowRoom({
         text: ans.text
       });
+      console.log('en func',allowed_room)
     });
 
   }, [socket]);
@@ -49,13 +53,14 @@ function Homepage({ socket }) {
         <div className={`modal fade show`} style={{ display: "block", backgroundColor: '#000000BF', transition: "all 0.5s ease-in" }}>
           <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content">
-              <h3 //className={styles.bodyFont}
-              >{full_room.text} </h3>
-              <Link to={`/`}>
-                <button //className={styles.redbtn} onClick={() => hideModal()}
+              <br />
+              <h3> {full_room.text} </h3>
+              <div className="modal-footer">
+                <button  
+                onClick={() => setFullRoom({text: undefined})}
                 >Ok
                 </button>
-              </Link>
+                </div>
             </div>
           </div>
         </div>
@@ -72,11 +77,13 @@ function Homepage({ socket }) {
         onChange={(e) => setroomname(e.target.value)}
       ></input>
       <button onClick={sendData}>Validate Room</button>
-      {allowed_room.text &&
+      {
+      allowed_room.text &&
         <Link to={`/chat/${roomname}/${username}`}>
           <button >Join Game</button>
         </Link>
       }
+      {console.log('en div',allowed_room)}
     </div>
   );
 }

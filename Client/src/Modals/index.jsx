@@ -167,11 +167,11 @@ class Modal extends Component {
                 <br />
                 <div class="modal-footer">
                   {this.state.selectValues.length === this.state.selectValuesLie.length ?
-                    <button type="button" onClick={() => { this.sendMove(socket, roomname); closeModal();}}>End Turn</button>
+                    <button type="button" className="btn btn-primary" onClick={() => { this.sendMove(socket, roomname); closeModal();}}>End Turn</button>
                     :
                     `You must select ${this.state.selectValues.length} cards`
                   }
-                  <button type="button" onClick={() => { closeModal() }}>Close</button>
+                  <button type="button" className="btn btn-secondary" onClick={() => { closeModal() }}>Close</button>
                 </div>
               </div>}
 
@@ -193,13 +193,13 @@ class Modal extends Component {
                 </div>
                 <br />
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" onClick={() => {
+                  <button type="button" className="btn btn-primary" onClick={() => {
                     this.setState({
                       onPlay: false,
                       onLie: true
                     })
                   }}>Save changes</button>
-                  <button type="button" class="btn btn-light" onClick={() => { closeModal() }}>Close</button>
+                  <button type="button" className="btn btn-secondary" onClick={() => { closeModal() }}>Close</button>
                 </div>
               </div>
             }
@@ -212,15 +212,15 @@ class Modal extends Component {
             <hr></hr>
             <div className='row'>
               <div className="col col-md-3">
-              <button type="button" class="btn btn-danger" onClick={() => {this.sendChoice(true, socket, roomname); closeModal(); }}>It`s Lie!</button>
+              <button type="button" className="btn btn-danger" onClick={() => {this.sendChoice(true, socket, roomname); closeModal(); }}>It`s Lie!</button>
               </div>
               <div className="col col-md-3">
-                <button type="button" class="btn btn-success" onClick={() => {this.sendChoice(false, socket, roomname); closeModal(); }}>It`s True!</button>
+                <button type="button" className="btn btn-success" onClick={() => {this.sendChoice(false, socket, roomname); closeModal(); }}>It`s True!</button>
               </div>
             </div>
           <br />
             <div class="modal-footer">
-              <button type="button" class="btn btn-light" onClick={() => { closeModal() }}>Close</button>
+              <button type="button" class="btn btn-secondary" onClick={() => { closeModal() }}>Close</button>
             </div>
           </div>
         }

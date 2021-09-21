@@ -1,8 +1,10 @@
 .board {
   width: 100%;
   height: 100%;
-  background-color: #296317;
-  padding: 3%;
+  /*background-color: #296317;*/
+  background: linear-gradient(to top, #296317 98%, black  10%);
+  padding: 0% 3% 1% 3%;
+  border-radius: 5px;
 }
 
 .gameboard{ 
@@ -15,4 +17,39 @@
 .box {
   background-color: #d9d9d9;
   border: 2px solid black;
+}
+
+.h4Changetext {
+  color: white;
+  padding: 20px 8px 8px 8px;
+  /*background-color: yellowgreen;*/
+  width: 100%;
+  border-color: 1px solid #d9d9d9;
+}
+
+.h4 {
+  color: white;
+  font-weight: 800;
+  background-color: black;
+  padding: 20px 8px 8px 8px;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  border-radius: 0px 0px 20px 20px;
+  /*box-shadow: 6px ​6px 12px 1px #022c13*/
+}
+
+.button {
+  font-size: 1rem;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  width: 100px;
+  border: none;
+  background-color: #ffac41;
+  background-color: #E2D7C0;
+  border-radius: 5px;
+  color: black;
+}
+
+.button:hover {
+  cursor: pointer;
 }
