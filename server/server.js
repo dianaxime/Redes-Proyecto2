@@ -14,7 +14,8 @@ const {
   process_Move,
   process_Choice,
   define_Winner,
-  can_Start 
+  can_Start,
+  remove_Room 
 } = require("./bullsh");
 
 const {
@@ -200,6 +201,9 @@ io.on("connection", (socket) => {
       io.to(room).emit("winner", to_Encrypt(JSON.stringify({
         text: `The winner is ${p_winner.username}`,
       })));
+
+      // Eliminar los jugadores y el room
+      remove_Room(room);
     } else {
       /*
        Envia la informacion actualizada de los turnos y del mazo 
@@ -245,6 +249,9 @@ io.on("connection", (socket) => {
         text: `The winner is ${n_winners}`,
       })));
     }
+
+    // Elimina los jugadores y el room
+    remove_Room(room);
   });
 
   // Cuando el usuario se desconecta del juego se envia un mensaje por el chat
