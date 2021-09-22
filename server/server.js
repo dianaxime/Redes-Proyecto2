@@ -197,7 +197,7 @@ io.on("connection", (socket) => {
 
     // Si ya hay un ganador envia la informacion y termina el juego
     if (game_over) {
-      socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
+      io.to(room).emit("winner", to_Encrypt(JSON.stringify({
         text: `The winner is ${p_winner.username}`,
       })));
     } else {
@@ -237,11 +237,11 @@ io.on("connection", (socket) => {
       de un ganador envia que hubo un empate
     */
     if (q_w > 1) {
-      socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
+      io.to(room).emit("winner", to_Encrypt(JSON.stringify({
         text: `There was a tie between ${n_winners}`,
       })));
     } else {
-      socket.broadcast.to(room).emit("winner", to_Encrypt(JSON.stringify({
+      io.to(room).emit("winner", to_Encrypt(JSON.stringify({
         text: `The winner is ${n_winners}`,
       })));
     }
