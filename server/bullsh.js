@@ -109,7 +109,7 @@ function copy_Deck(array) {
 
 // verifica si hay tres o mas integrantes en el room
 function can_Start(room) {
-  return c_rooms[room]['c_players'] >= 3;
+  return c_rooms[room]['c_players'] <= 3;
 }
 
 // Reparte las cartas entre los jugadores de ese room
