@@ -221,14 +221,14 @@ function process_Choice(room, choice, userId) {
   if (c_rooms[room]['liar'] == choice && choice == true) {
     c_users[b_userId]['deck'] = [...c_users[b_userId]['deck'], ...c_rooms[room]['c_table']];
     c_rooms[room]['c_table'] = [];
-    d_winner = c_users[b_userId]['username'];
+    d_winner = c_users[userId]['username'];
   }
   
   // Si no adivina el se lleva las cartas
   if (c_rooms[room]['liar'] != choice) {
     c_users[userId]['deck'] = [...c_users[userId]['deck'], ...c_rooms[room]['c_table']];
     c_rooms[room]['c_table'] = [];
-    d_winner = c_users[userId]['username'];
+    d_winner = c_users[b_userId]['username'];
   }
 
   if (c_rooms[room]['liar'] == choice && choice == false) {
