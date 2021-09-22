@@ -288,6 +288,14 @@ function define_Winner(room) {
   return result;
 }
 
+function remove_Room(room) {
+  for (var i of c_rooms[room]['users']) {
+    user_Disconnect(i);
+  }
+
+  c_rooms = omit(c_rooms, room);
+}
+
 module.exports = {
   join_User,
   get_Current_User,
@@ -299,5 +307,6 @@ module.exports = {
   process_Move,
   process_Choice,
   define_Winner,
-  can_Start
+  can_Start,
+  remove_Room
 };
