@@ -167,11 +167,11 @@ class Modal extends Component {
                 <br />
                 <div class="modal-footer">
                   {this.state.selectValues.length === this.state.selectValuesLie.length ?
-                    <button type="button" className="btn btn-primary" onClick={() => { this.sendMove(socket, roomname); closeModal();}}>End Turn</button>
+                    <button type="button" className="btn btn-outline-primary" onClick={() => { this.sendMove(socket, roomname); closeModal();}}>End Turn</button>
                     :
                     `You must select ${this.state.selectValues.length} cards`
                   }
-                  <button type="button" className="btn btn-secondary" onClick={() => { closeModal() }}>Close</button>
+                  <button type="button" className="btn btn-outline-secondary" onClick={() => { closeModal() }}>Close</button>
                 </div>
               </div>}
 
@@ -193,13 +193,13 @@ class Modal extends Component {
                 </div>
                 <br />
                 <div class="modal-footer">
-                  <button type="button" className="btn btn-primary" onClick={() => {
+                  <button type="button" className="btn btn-outline-primary" onClick={() => {
                     this.setState({
                       onPlay: false,
                       onLie: true
                     })
                   }}>Save changes</button>
-                  <button type="button" className="btn btn-secondary" onClick={() => { closeModal() }}>Close</button>
+                  <button type="button" className="btn btn-outline-secondary" onClick={() => { closeModal() }}>Close</button>
                 </div>
               </div>
             }
@@ -220,7 +220,7 @@ class Modal extends Component {
             </div>
           <br />
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" onClick={() => { closeModal() }}>Close</button>
+              <button type="button" class="btn btn-outline-secondary" onClick={() => { closeModal() }}>Close</button>
             </div>
           </div>
         }

@@ -10,6 +10,7 @@ function Chat({ username, roomname, socket }) {
   const [messages, setMessages] = useState([]);
   const [player, setPlayer] = useState([]);
   const [winner, setWinner] = useState([]);
+  const [start, setStart] = useState([]);
 
 
   const dispatch = useDispatch();
@@ -86,6 +87,17 @@ function Chat({ username, roomname, socket }) {
       });
     });
 
+    socket.on("cant_start", (data) => {
+      //decypt
+      console.log(data)
+      let ans = to_Decrypt(JSON.stringify(data));
+      ans = JSON.parse(ans);
+      console.log('cant_start', ans);
+      setStart({
+        text: ans.text
+      });
+    });
+
 
   }, [socket]);
 
@@ -125,10 +137,26 @@ function Chat({ username, roomname, socket }) {
               <h3>{winner.text} </h3>
               <div className="modal-footer">
                 <Link to={`/`}>
-                  <button className="btn btn-light">
+                  <button className="btn btn-outline-secondary">
                     Ok
                   </button>
                 </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+{start.text &&
+        <div className={`modal fade show`} style={{ display: "block", backgroundColor: '#000000BF', transition: "all 0.5s ease-in" }}>
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <br />
+              <h3>{start.text} </h3>
+              <div className="modal-footer">
+                  <button className="btn btn-outline-secondary" onClick={() => {setStart({text: undefined})}}>
+                    Ok
+                  </button>
               </div>
             </div>
           </div>

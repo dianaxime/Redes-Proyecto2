@@ -76,14 +76,15 @@ function Homepage({ socket }) {
         value={roomname}
         onChange={(e) => setroomname(e.target.value)}
       ></input>
-      <button onClick={sendData}>Validate Room</button>
+      
       {
-      allowed_room.text &&
+      allowed_room.text ?
         <Link to={`/chat/${roomname}/${username}`}>
           <button >Join Game</button>
         </Link>
+        :<button onClick={sendData}>Validate Room</button>
       }
-      {console.log('en div',allowed_room)}
+      {/*console.log('en div',allowed_room)*/}
     </div>
   );
 }
