@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import styles from './modal.module.css';
 import { Component } from 'react';
 import Select from "react-dropdown-select";
-import { to_Decrypt, to_Encrypt } from "../aes.js";
-import styled from "@emotion/styled";
+import { to_Encrypt } from "../aes.js";
 
 
 const pool_cards = [
@@ -141,8 +140,6 @@ class Modal extends Component {
       closeModal,
       socket,
       roomname,
-      deck,
-      saveChanges
     } = this.props;
     return (
       <div>

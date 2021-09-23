@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Board from "../board";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import Instructive from '../assets/instrucciones.pdf';
 
 function Chat({ username, roomname, socket }) {
   const [text, setText] = useState("");
@@ -11,13 +12,14 @@ function Chat({ username, roomname, socket }) {
   const [player, setPlayer] = useState([]);
   const [winner, setWinner] = useState([]);
   const [start, setStart] = useState([]);
+  const [reload, setReload] = useState(false);
 
 
-  const dispatch = useDispatch();
+  /*const dispatch = useDispatch();
 
   const dispatchProcess = (encrypt, msg, cipher) => {
     dispatch(process(encrypt, msg, cipher));
-  };
+  };*/
 
   useEffect(() => {
     socket.on("message", (data) => {
@@ -37,7 +39,6 @@ function Chat({ username, roomname, socket }) {
     /*Funciones que escuchan*/
     socket.on("player", (data) => {
       //decypt
-      console.log(data)
       let ans = to_Decrypt(JSON.stringify(data));
       ans = JSON.parse(ans);
       setPlayer({
@@ -50,10 +51,8 @@ function Chat({ username, roomname, socket }) {
 
     socket.on("change_turn", (data) => {
       //decypt
-      console.log(data)
       let ans = to_Decrypt(JSON.stringify(data));
       ans = JSON.parse(ans);
-      console.log('change_turn', ans);
       setPlayer({
         userId: ans.userId,
         username: ans.username,
@@ -64,10 +63,8 @@ function Chat({ username, roomname, socket }) {
 
     socket.on("turn_winner", (data) => {
       //decypt
-      console.log(data)
       let ans = to_Decrypt(JSON.stringify(data));
       ans = JSON.parse(ans);
-      console.log('turn_winner', ans);
       setPlayer({
         userId: ans.userId,
         username: ans.username,
@@ -78,10 +75,8 @@ function Chat({ username, roomname, socket }) {
 
     socket.on("winner", (data) => {
       //decypt
-      console.log(data)
       let ans = to_Decrypt(JSON.stringify(data));
       ans = JSON.parse(ans);
-      console.log('winner', ans);
       setWinner({
         text: ans.text
       });
@@ -89,10 +84,8 @@ function Chat({ username, roomname, socket }) {
 
     socket.on("cant_start", (data) => {
       //decypt
-      console.log(data)
       let ans = to_Decrypt(JSON.stringify(data));
       ans = JSON.parse(ans);
-      console.log('cant_start', ans);
       setStart({
         text: ans.text
       });
@@ -114,21 +107,34 @@ function Chat({ username, roomname, socket }) {
 
   const startGame = () => {
     //encrypt here
-    console.log(roomname)
     const ans = to_Encrypt(roomname);
-    console.log(ans)
     socket.emit("play", ans);
   }
 
-   const scrollToBottom = () =>   {
+  const userJoined = () => {
+    if (reload === false) {
+      const ans = to_Encrypt(roomname);
+      socket.emit("user_joined", ans);
+      setReload(true);
+    }
+  }
+
+  const endGame = () => {
+    //encrypt here
+    const ans = to_Encrypt(roomname);
+    socket.emit("finish", ans);
+  }
+
+  const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(scrollToBottom, [messages]); 
+  useEffect(scrollToBottom, [messages]);
 
 
   return (
-    <div className="row">
+    <div className="row" >
+      {userJoined()}
       {winner.text &&
         <div className={`modal fade show`} style={{ display: "block", backgroundColor: '#000000BF', transition: "all 0.5s ease-in" }}>
           <div className="modal-dialog modal-dialog-centered" role="document">
@@ -146,17 +152,16 @@ function Chat({ username, roomname, socket }) {
           </div>
         </div>
       }
-
-{start.text &&
+      {start.text &&
         <div className={`modal fade show`} style={{ display: "block", backgroundColor: '#000000BF', transition: "all 0.5s ease-in" }}>
           <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content">
               <br />
               <h3>{start.text} </h3>
               <div className="modal-footer">
-                  <button className="btn btn-outline-secondary" onClick={() => {setStart({text: undefined})}}>
-                    Ok
-                  </button>
+                <button className="btn btn-outline-secondary" onClick={() => { setStart({ text: undefined }) }}>
+                  Ok
+                </button>
               </div>
             </div>
           </div>
@@ -172,18 +177,27 @@ function Chat({ username, roomname, socket }) {
             roomname={roomname}
           /> :
           <><button
-          className="btn btn-light" onClick={startGame}>
-            Iniciar partida</button>
+            className="btn btn-light" onClick={startGame}>
+            Start Game</button>
           </>}
       </div>
       <div className="col col-lg-4">
         <div className="chat">
           <div className="user-name">
+            <div className="row">
+            <div className="col">
             <h2>
               {username} <span style={{ fontSize: "0.7rem" }}>in {roomname}</span>
-            </h2>
+                 </h2>
+                 </div>
+                 <div className="col col-md-2">
+              <span style={{ alignSelf: "end" }}><button data-toggle="tooltip" data-placement="top" title="Finish Game" className="btn btn-danger" onClick={() => {endGame()}}> X </button></span></div>
+              <div className="col col-md-2">
+              <span style={{ alignSelf: "end" }}><a data-toggle="tooltip" data-placement="top" title="Download Manual" className="btn btn-warning" href={`${Instructive}`} download> ? </a></span>
+              </div></div>
           </div>
           <div className="chat-message">
+
             {messages.map((i) => {
               if (i.username === username) {
                 if (i.flag === 'message') {

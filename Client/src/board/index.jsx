@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { Component } from 'react';
 import Deck from '../Deck';
 import style from './board.module.css';
@@ -10,8 +10,6 @@ class Board extends Component {
     this.state = {
       lieModal: false,
       guessModal: false,
-      //lenghtD: [1, 2]
-      //guess: undefined
     }
   }
 
@@ -25,10 +23,6 @@ class Board extends Component {
     this.setState({
       guessModal: !this.state.guessModal
     });
-  }
-
-  sendLie = (lie) => {
-    console.log(lie)
   }
 
   render() {

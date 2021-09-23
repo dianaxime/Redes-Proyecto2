@@ -1,7 +1,6 @@
 import Chat from "./chat/chat";
 import Process from "./process/process";
 import Home from "./home/home";
-import DropDown from "./Dropdown";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.scss";
 import React from "react";
@@ -34,7 +33,6 @@ function App() {
             <Home socket={socket} />
           </Route>
           <Route path="/chat/:roomname/:username" component={Appmain} />
-          <Route path="/modal" component={DropDown} />
         </Switch>
       </div>
     </Router>

@@ -8,16 +8,13 @@ function Homepage({ socket }) {
   const [roomname, setroomname] = useState("");
   const [full_room, setFullRoom] = useState([]);
   const [allowed_room, setAllowRoom] = useState([]);
-  let co
 
 
   useEffect(() => {
     socket.on("full_room", (data) => {
       //decypt
-      console.log('full_room', data);
       let ans = to_Decrypt(JSON.stringify(data));
       ans = JSON.parse(ans);
-      console.log('full_room', ans);
       setFullRoom({
         text: ans.text
       });
@@ -25,14 +22,11 @@ function Homepage({ socket }) {
 
     socket.on("allowed_room", (data) => {
       //decypt
-      console.log('allowed_room', data);
       let ans = to_Decrypt(JSON.stringify(data));
       ans = JSON.parse(ans);
-      console.log('allowed_room', ans);
       setAllowRoom({
         text: ans.text
       });
-      console.log('en func',allowed_room)
     });
 
   }, [socket]);
@@ -80,11 +74,10 @@ function Homepage({ socket }) {
       {
       allowed_room.text ?
         <Link to={`/chat/${roomname}/${username}`}>
-          <button >Join Game</button>
+          <button>Join Game</button>
         </Link>
         :<button onClick={sendData}>Validate Room</button>
       }
-      {/*console.log('en div',allowed_room)*/}
     </div>
   );
 }
