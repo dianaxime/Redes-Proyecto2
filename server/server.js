@@ -27,7 +27,7 @@ app.use(express());
 
 const port = 8000;
 
-app.use(cors());
+app.use(cors({origin: '*'}));
 
 var server = app.listen(
   port,
