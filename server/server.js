@@ -29,6 +29,10 @@ const port = 8000;
 
 app.use(cors({origin: '*'}));
 
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+});
+
 var server = app.listen(
   port,
   console.log(
@@ -37,7 +41,12 @@ var server = app.listen(
   )
 );
 
-const io = socket(server);
+const io = socket(server, {
+  cors: {
+      origin: "*",
+      methods: ["GET", "POST"]
+  }
+});
 
 // Inicializar la conexionn 
 io.on("connection", (socket) => {
