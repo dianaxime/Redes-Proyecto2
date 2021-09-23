@@ -44,23 +44,25 @@ class Board extends Component {
       <div className={style.board}>
 
         <div className="row">
-          <div className="col col-md-2">
-            <h4>Username:</h4>
+          <div className="col col-md-3">
+            <h4 className={style.h4}>Username:</h4>
           </div>
           <div className="col col-md-2">
-            <h4>{username ? username : ''}</h4>
+            <h4 className={style.h4Changetext}>{username ? username : ''}</h4>
           </div>
           <div className="col col-md-2">
-            <h4>On turn:</h4> </div>
+            <h4 className={style.h4}>On turn:</h4> </div>
           <div className="col col-md-2">
-            <h4>{on_turn ? on_turn : ''}</h4>
+            <h4 className={style.h4Changetext}>{on_turn ? on_turn : ''}</h4>
           </div>
           <div className="col col-md-2">
             {on_turn &&
               <>
+              <br />
                 {on_turn === 'liar' ?
                   <span>
                     <button
+                      className="btn btn-outline-light"
                       onClick={() => { this.formLie() }}
                     >Select lie
                     </button>
@@ -70,6 +72,7 @@ class Board extends Component {
             {on_turn && <>{on_turn === 'guesser' ?
               <span>
                 <button
+                  className="btn btn-outline-light"
                   onClick={() => { this.formGuess() }}
                 > Decide
                 </button>
@@ -77,11 +80,11 @@ class Board extends Component {
               ''}
             </>}
           </div>
-          <br />
+          
           <div className="col col-md-12">
-
             {/* aqui llamamos a los forms de movimiento y mentira o verdad */}
-
+            <br />
+          
             {this.state.lieModal === true &&
               <Modal
                 type={'lie'}
@@ -98,7 +101,7 @@ class Board extends Component {
                 deck={deck}
                 socket={socket}
                 roomname={roomname}
-            />}
+              />}
           </div>
           {/* cartas del player*/}
           <div className={style.gameboard}>
