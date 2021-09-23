@@ -70,14 +70,6 @@ io.on("connection", (socket) => {
         text: `Allowed.`,
       })));
   
-      // Muestra un mensaje de bienvenida
-      socket.emit("message", to_Encrypt(JSON.stringify({
-        userId: p_user.id,
-        username: p_user.username,
-        text: `Welcome ${p_user.username}`,
-        flag: `message`,
-      })));
-  
       // Muestra un mensaje a los jugadores del room que alguien se ha unido
       socket.broadcast.to(p_user.room).emit("message", to_Encrypt(JSON.stringify({
         userId: p_user.id,
@@ -86,6 +78,19 @@ io.on("connection", (socket) => {
         flag: `message`,
       })));
     }
+  });
+
+  // Envio de mensaje de welcome
+  socket.on("user_joined", () => {
+    const p_user = get_Current_User(socket.id);
+
+    // Muestra un mensaje de bienvenida
+    socket.emit("message", to_Encrypt(JSON.stringify({
+      userId: p_user.id,
+      username: p_user.username,
+      text: `Welcome ${p_user.username}`,
+      flag: `message`,
+    })));
   });
 
   // Envio de mensajes por el chat
