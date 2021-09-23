@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { Component } from 'react';
 import style from './deck.module.css';
 
