@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Board from "../board";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import Instructive from '../assets/instrucciones.pdf';
 
 function Chat({ username, roomname, socket }) {
   const [text, setText] = useState("");
@@ -173,7 +174,7 @@ function Chat({ username, roomname, socket }) {
           /> :
           <><button
           className="btn btn-light" onClick={startGame}>
-            Iniciar partida</button>
+            Start Game</button>
           </>}
       </div>
       <div className="col col-lg-4">
@@ -181,6 +182,7 @@ function Chat({ username, roomname, socket }) {
           <div className="user-name">
             <h2>
               {username} <span style={{ fontSize: "0.7rem" }}>in {roomname}</span>
+              <span style={{ marginLeft: "230px" }}><a className="btn btn-warning" href={`${Instructive}`} download> ? </a></span>
             </h2>
           </div>
           <div className="chat-message">
