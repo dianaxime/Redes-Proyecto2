@@ -162,17 +162,17 @@ function process_Move(room, userId, r_cards, lie) {
     }
   }
 
-  // funcion de comparacion
-  function customizer(objValue, othValue) {
-      if (isEqual(objValue, othValue)) {
-        return true;
-      }
-  }
-  
   let players = [];
-  
+  let counter = 0;
+
   // verifica si la jugada es igual a la mentira
-  if (!isEqualWith(r_cards, lie, customizer)) {
+  for (var i of r_cards) {
+    if  (lie.includes(i)) {
+      counter++;
+    }
+  }
+
+  if (counter <= lie.length) {
     c_rooms[room]['liar'] = true;
   }
 
