@@ -189,7 +189,7 @@ $ npm start
 
 ## Demo
 
-> Watch the video [here](https://youtu.be/0q6omCgKWMM)
+> Watch the video [here](https://youtu.be/S-OWB7jaVOs)
 
 > [Play now](http://cheatgame.s3-website.us-east-2.amazonaws.com/) Cheat Game 
 
