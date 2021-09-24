@@ -187,6 +187,12 @@ $ npm start
 }
 ```
 
+## Instructions
+
+![Instrucctions](https://github.com/dianaxime/Redes-Proyecto2/blob/main/instrucciones.PNG?raw=true)
+
+[Ref](https://saposyprincesas.elmundo.es/ocio-en-casa/juegos-para-ninos/juegos-de-cartas/)
+
 ## Demo
 
 > Watch the video [here](https://youtu.be/S-OWB7jaVOs)
