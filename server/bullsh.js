@@ -167,12 +167,14 @@ function process_Move(room, userId, r_cards, lie) {
 
   // verifica si la jugada es igual a la mentira
   for (var i of r_cards) {
-    if  (lie.includes(i)) {
-      counter++;
+    for (var j of lie) {
+      if  (isEqual(i, j)) {
+        counter = counter + 1;
+      }
     }
   }
 
-  if (counter <= lie.length) {
+  if (counter < lie.length) {
     c_rooms[room]['liar'] = true;
   }
 
