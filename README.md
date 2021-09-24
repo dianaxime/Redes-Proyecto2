@@ -1,5 +1,9 @@
 # Networks course - Cheat Game
 
+![cheatGame](https://github.com/dianaxime/Redes-Proyecto2/blob/main/cheatgame.PNG?raw=true)
+
+![Board](https://github.com/dianaxime/Redes-Proyecto2/blob/main/tablero.PNG?raw=true)
+
 ## Requirements
 
 - Node JS
