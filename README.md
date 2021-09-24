@@ -27,6 +27,166 @@ $ npm start
 
 ## Protocol
 
+### Client to Server
+
+> Join Room
+```json
+{
+  "room": "room1",
+  "username": "Camila"
+}
+```
+
+> User Joined
+```json
+{
+  "room": "room1",
+  "username": "Camila"
+}
+```
+
+> Chat
+```json
+{
+  "text": "Este es un mensaje"
+}
+```
+
+> Play
+```json
+{
+  "room": "room1"
+}
+```
+
+> Move
+```json
+{
+  "room": "room1",
+  "r_cards": [
+    {
+      "palo": "oro",
+      "valor": 5,
+      "desc": "Five of Coins"
+    }
+  ],
+  "lie": [
+    {
+      "palo": "oro",
+      "valor": 5,
+      "desc": "Five of Coins"
+    }
+  ]
+}
+```
+
+> Guesser choice
+```json
+{
+  "room": "room1",
+  "choice": true
+}
+```
+
+> Finish
+```json
+{
+  "room": "room1"
+}
+```
+
+### Server to Client
+
+> Full Room
+```json
+{
+  "userId": "528dnhwjuuw23",
+  "username": "Camila",
+  "text": "Sorry, the game has already started."
+}
+```
+
+> Allowed Room
+```json
+{
+  "userId": "528dnhwjuuw23",
+  "username": "Camila",
+  "text": "Allowed."
+}
+```
+
+> Message
+```json
+{
+  "userId": "528dnhwjuuw23",
+  "username": "Camila",
+  "text": "Distintos mensajes...",
+  "flag": "broadcast"
+}
+```
+
+> Player
+```json
+{
+  "userId": "528dnhwjuuw23",
+  "username": "Camila",
+  "turn": "liar",
+  "deck": [
+    {
+      "palo": "oro",
+      "valor": 5,
+      "desc": "Five of Coins"
+    }
+  ]
+}
+```
+
+> Can´t Start
+```json
+{
+  "userId": "528dnhwjuuw23",
+  "username": "Camila",
+  "text": "You need three or more players."
+}
+```
+
+> Change Turn
+```json
+{
+  "userId": "528dnhwjuuw23",
+  "username": "Camila",
+  "turn": "guesser",
+  "deck": [
+    {
+      "palo": "oro",
+      "valor": 5,
+      "desc": "Five of Coins"
+    }
+  ]
+```
+
+> Turn Winner
+```json
+{
+  "userId": "528dnhwjuuw23",
+  "username": "Camila",
+  "turn": "inactive",
+  "deck": [
+    {
+      "palo": "oro",
+      "valor": 5,
+      "desc": "Five of Coins"
+    }
+  ]
+```
+
+> Winner
+```json
+{
+  "text": "The winner is Diana."
+}
+```
+
 ## Demo
 
 > Watch the video [here](https://youtu.be/0q6omCgKWMM)
